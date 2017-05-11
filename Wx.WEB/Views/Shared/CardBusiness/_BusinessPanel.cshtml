@@ -1,0 +1,55 @@
+﻿@using Wx.WEB.Core.ViewModels
+@using OSC.Models;
+@using Newtonsoft.Json;
+
+@model CardBusinessRule
+@{
+    string FeeTypecode = string.Empty;
+    if (Model.BusinessInfo.Count > 0)
+    {
+        FeeTypecode = Model.BusinessInfo[0].FEETYPECODE;
+    }
+}
+<hr />
+@if ((Model.BusinessInfo != null && Model.BusinessInfo.Count > 0) || Model.CostList != string.Empty)
+{
+    <div id="cc" class="easyui-layout" style="width:99%;height:160px;">
+        <div data-options="region:'west',border:false">
+            <div class="tradeParameter">
+                @if (!Model.IsCustomBusinessInfo)
+                {
+                    foreach (TradeParameter tp in Model.BusinessInfo)
+                    {
+                        <a href="javascript:void(0);" class="easyui-linkbutton" onclick="ChangeCostList('@tp.FEETYPECODE',@tp.FEE)">@Model.TradeName@(tp.FEE / 100.0)元</a>
+                    }
+                }
+                else
+                {
+                    <span style="margin-left:100px"> @Model.TradeName  </span>
+                <select id="TradeParameter" class="easyui-combobox" name="TradeParameter"
+                        data-options="width:120,onChange:function(n,o){if(n){if(!isNaN(n)){ChangeCostList('@FeeTypecode',n*100);} else {$.wx.easyui.msg.warning('请输入数字','');}}}">
+                    <option value="0">请选择充值金额</option>
+                    @foreach (TradeParameter tp in Model.BusinessInfo)
+                    {
+                        <option value="@(tp.FEE/ 100.0)">@(tp.FEE / 100.0)</option>
+                    }
+                </select><span> 元</span>
+                }
+            </div>
+        </div>
+        <div data-options="region:'east',border:false" style="width:320px;">
+            <div id="costList" class="statistic fr">
+            </div>
+        </div>
+    </div>
+}
+<div>
+    @if (Model.IsPrint)
+    {
+        <input id="AutoCheck" style="float: left;" type="checkbox" checked="checked" value="自动打印凭证" /><span style="font-size:12px;margin-top:5px;float:left;">自动打印凭证</span>
+        <a id="btnPrint" href="javascript:void(0);" data-options="iconCls:'icon-print',width:80,disabled:true,onClick:CreatePrintPage" class="easyui-linkbutton" style="float: left;margin-left:10px ">打印凭证</a>
+    }
+    <a id="btnSubmit" href="javascript:void(0);" data-options="iconCls:'icon-save',width:80,disabled:true,onClick:SubmitFunc" class="easyui-linkbutton submit" style="float:right;">@Model.TradeName</a>
+    <input type="hidden" id="hideTradeID" />
+    <input type="hidden" id="hideID" />
+</div>

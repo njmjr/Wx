@@ -1,0 +1,72 @@
+﻿@using Wx.WEB.Core.ViewModels
+@model Wx.WEB.Core.ViewModels.GridBusinessRule
+@{
+    Layout = "~/Views/Shared/_CURDLayout.cshtml";
+}
+@section customScript{
+    <script src="~/Scripts/common.js"></script>
+    <script type="text/javascript">
+
+        columns = [
+            [
+                { field: "DEPARTNO", title: "部门编码", width: 80, align: "center" },
+                { field: "DEPARTNAME", title: "部门名称", width: 80, align: "center" },
+                { field: "UPDATESTAFFNO", title: "更新员工", width: 80, align: "center" },
+                { field: "UPDATETIME", title: "更新时间", width: 120, align: "center" , formatter: function (value) { return $.wx.tools.formatDate(value); }},
+                { field: "REMARK", title: "备注", width: 80, align: "center" }
+            ]
+        ];
+        singleSelect = true;
+
+        bindSubmitRequest = function() {
+            if (submitRequest) {
+                var selectRows = grid.datagrid("getSelections");
+                var ids = $.Enumerable.From(selectRows).Select(function(m) { return m.@Model.PrimaryKey; }).ToArray();
+                submitRequest.ids = ids;
+            }
+        };
+
+        function loadError() {
+            $.onecard.easyui.msg.error("远程数据载入失败，请重试或检查参数。");
+        }
+    </script>
+}
+
+@section detailHmtl{
+    <table cellpadding="5">
+        <tr>
+            <td>
+                <div align="right">
+                    部门编码:
+                </div>
+            </td>
+            <td>
+                <input class="easyui-textbox" type="text" name="DEPARTNO" id="DEPARTNO" style="width: 120px;" data-options="validType:'length[4,4]'">
+                <span class="red">*</span>
+            </td>
+            <td>
+                <div align="right">
+                    部门名称:
+                </div>
+            </td>
+            <td>
+                <input class="easyui-textbox" type="text" name="DEPARTNAME" id="DEPARTNAME" style="width: 120px;" data-options="validType:'length[1,40]'">
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div align="right">
+                    备注:
+                </div>
+            </td>
+            <td>
+                <input class="easyui-textbox" type="text" name="REMARK" id="REMARK" style="width: 120px;" data-options="validType:'length[1,40]'">
+            </td>
+        </tr>
+    </table>
+}
+
+
+
+

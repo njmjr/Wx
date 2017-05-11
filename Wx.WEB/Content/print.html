@@ -1,0 +1,86 @@
+﻿
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>数据打印</title>
+    <style type="text/css">
+        body {
+            background: white;
+            margin: 0px;
+            padding: 0px;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        .title {
+            text-align: center;
+        }
+
+        .time {
+            font-weight: normal;
+            font-size: 13px;
+            text-align: right;
+        }
+
+        .pb {
+            font-size: 13px;
+            width: 750px;
+            border-collapse: collapse;
+        }
+
+            .pb th {
+                font-weight: bold;
+                text-align: center;
+                border: 1px solid #333333;
+                padding: 2px;
+            }
+
+            .pb td {
+                font-weight: lighter;
+                border: 1px solid #333333;
+                padding: 2px;
+            }
+
+        .juedui {
+            margin-left: 0px;
+            margin-top: 0px;
+            margin-right: 0px;
+            margin-bottom: 0px;
+            background-repeat: no-repeat;
+            font-size: 14px;
+            position: absolute;
+        }
+
+        .juedui_fapiao {
+            margin-left: 0px;
+            margin-top: 0px;
+            margin-right: 0px;
+            margin-bottom: 0px;
+            background-repeat: no-repeat;
+            font-size: 11px;
+            position: absolute;
+        }
+
+        #print {
+            margin-left: 0px;
+            margin-top: 2px;
+            margin-right: 0px;
+            margin-bottom: 2px;
+            font-size: 12px;
+            font-family: 黑体;
+        }
+            #print p {
+                line-height: 5px;*line-height: 0px;
+            }
+    </style>
+</head>
+<body>
+    <script type="text/javascript">
+        document.write(window.dialogArguments);
+        window.print();
+    </script>
+    <h1></h1>
+</body>
+</html>

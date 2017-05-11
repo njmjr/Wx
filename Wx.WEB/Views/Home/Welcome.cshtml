@@ -1,0 +1,75 @@
+﻿@{
+    ViewBag.Title = "Welcome";
+    Layout = null;
+    var city = System.Configuration.ConfigurationManager.AppSettings["City"];
+    var ocxVersion =  System.Configuration.ConfigurationManager.AppSettings["OcxVersion"];
+    var ClsId = System.Configuration.ConfigurationManager.AppSettings["ClsId"];
+    string ocxURI =  string.Empty;
+    if(!string.IsNullOrEmpty(ocxVersion))
+    {
+        ocxURI = string.Format("codebase='../Tools/Ocx{0}.cab#version={1}'",
+       city.ToUpper(), ocxVersion);
+    }
+}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>index主页面</title>
+    <link href="~/Content/welcome.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.11.1.min.js"></script>
+    <script src="~/Scripts/jquery.easyui.min-1.4.1.js"></script>
+</head>
+
+<body style="background-color:#f2f2f2;">
+    <object id="CardCtrl" classid="clsid:@ClsId" width="0" height="0" @Html.Raw(ocxURI)=Html.Raw(ocxURI)></object>
+    <script src="~/Scripts/wx.cardreaderImpl.js"></script>
+    <script type="text/javascript">
+        var cardReader = $.wx.ocx.CardReader;
+        cardReader.testingMode = "@Session["type"]" == "test";
+        cardReader.OperateCardNo = "@Session["OperateCard"]";
+        cardReader.city = '@city';
+    </script>
+    <div class="mainindex">
+        <div class="welinfo">
+            <span><img src="~/Content/images/sun.png" alt="天气" /></span>
+            <b>欢迎使用吴江市民卡管理系统</b>
+        </div>
+
+        <div class="xline"></div>
+        <div class="xline1"></div>
+        <div class="welinfo">
+            <span><img src="~/Content/images/dp.png" alt="提醒" /></span>
+            <b>吴江市民卡管理系统</b>
+            <a href="#"><b>使用指南</b></a>
+        </div>
+        <ul class="iconlist">
+
+            <li onclick="parent.addTab('售卡', 'PersonalBusiness/SaleCard')"><img src="~/Content/images/salecard_l.png" /><p><a href="javascript:void(0);">售卡</a></p></li>
+            <li onclick="parent.addTab('换卡', 'PersonalBusiness/ChangeCard')"><img src="~/Content/images/change_l.png" /><p><a href="javascript:void(0)">换卡</a></p></li>
+            <li onclick="parent.addTab('退卡', 'PersonalBusiness/ReturnCard')"><img src="~/Content/images/returncard_l.png" /><p><a href="javascript:void(0)">退卡</a></p></li>
+            <li onclick="parent.addTab('解锁', 'PersonalBusiness/Unlock')"><img src="~/Content/images/unlock_l.png" /><p><a href="javascript:void(0)">解锁</a></p></li>
+            <li onclick="parent.addTab('查询', 'PersonalBusiness/PBQuery')"><img src="~/Content/images/ico06.png" /><p><a href="javascript:void(0)">查询</a></p></li>
+
+        </ul>
+
+        <div class="ibox"></div>
+
+        <div class="xline"></div>
+        <div class="xline1"></div>
+        <div class="box"></div>
+
+        <ul class="iconlist">
+            <li onclick="parent.addTab('营业员日报', 'Report/StaffDailyReport')"><img src="~/Content/images/staffreport_l.png" /><p><a href="javascript:void(0)">营业员日报</a></p></li>
+            <li onclick="parent.addTab('营业员日报明细', 'Report/StaffDailyDetailReport')"><img src="~/Content/images/staffreportdetail_l.png" /><p><a href="javascript:void(0)">日报明细</a></p></li>
+        </ul>
+        <div style="height:30px;"></div>
+
+        <div class="xline"></div>
+        <div class="xline1"></div>
+
+    </div>
+
+</body>
+
+</html>

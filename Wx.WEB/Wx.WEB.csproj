@@ -1,0 +1,539 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D0C1D69D-6AC1-4ACF-8E89-2C387206E742}</ProjectGuid>
+    <ProjectTypeGuids>{E3E379DF-F4C6-4180-9B81-6769533ABE47};{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Wx.WEB</RootNamespace>
+    <AssemblyName>Wx.WEB</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <MvcProjectUpgradeChecked>true</MvcProjectUpgradeChecked>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>12.0</OldToolsVersion>
+    <UseGlobalApplicationHostFile />
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NLog.4.1.2\lib\net40\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack, Version=4.0.42.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.4.0.42\lib\net40\ServiceStack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.Client">
+      <HintPath>..\packages\ServiceStack.Client.4.0.42\lib\net40\ServiceStack.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Common, Version=4.0.42.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Common.4.0.42\lib\net40\ServiceStack.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.Interfaces">
+      <HintPath>..\packages\ServiceStack.Interfaces.4.0.42\lib\portable-wp80+sl5+net40+win8+monotouch+monoandroid+xamarin.ios10\ServiceStack.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Text">
+      <HintPath>..\packages\ServiceStack.Text.4.0.42\lib\net40\ServiceStack.Text.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Mvc.FixedDisplayModes, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.FixedDisplayModes.1.0.0\lib\net40\Microsoft.Web.Mvc.FixedDisplayModes.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.30506.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.4.0.30506.0\lib\net40\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.4.0.30506.0\lib\net40\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.4.0.30506.0\lib\net40\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.0.0\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Providers">
+      <HintPath>..\packages\Microsoft.AspNet.Providers.Core.1.2\lib\net40\System.Web.Providers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.30506.0\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.2.0.30506.0\lib\net40\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.3.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.3.0\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Constants\Constants.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PrivilegePRController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceModel\BadCardSync.cs" />
+    <Compile Include="ServiceModel\ChangeCardForBank.cs" />
+    <Compile Include="ServiceModel\GetBankPic.cs" />
+    <Compile Include="ServiceModel\MakeUpCard.cs" />
+    <Compile Include="ServiceModel\PersonIdentity.cs" />
+    <Compile Include="ServiceModel\PrintPicture.cs" />
+    <Compile Include="ServiceModel\OnecardServiceRespnose.cs" />
+    <Compile Include="ServiceModel\UnLockCard.cs" />
+    <Compile Include="ServiceModel\ChangeCard.cs" />
+    <Compile Include="ServiceModel\DestroyCard.cs" />
+    <Compile Include="ServiceModel\ReportLoss.cs" />
+    <Compile Include="ServiceModel\ReturnCard.cs" />
+    <Compile Include="ServiceModel\SaleCard.cs" />
+    <Compile Include="ServiceModel\TransitBalance.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\images\404.png" />
+    <Content Include="Content\images\add.png" />
+    <Content Include="Content\images\btnbg.png" />
+    <Content Include="Content\images\btnbg1.png" />
+    <Content Include="Content\images\btnbg2.png" />
+    <Content Include="Content\images\buttonbg.png" />
+    <Content Include="Content\images\calculator.png" />
+    <Content Include="Content\images\card message.png" />
+    <Content Include="Content\images\cbg.png" />
+    <Content Include="Content\images\change.png" />
+    <Content Include="Content\images\change_l.png" />
+    <Content Include="Content\images\charge.png" />
+    <Content Include="Content\images\charge_l.png" />
+    <Content Include="Content\images\checkmark.gif" />
+    <Content Include="Content\images\checknomark.gif" />
+    <Content Include="Content\images\clist.png" />
+    <Content Include="Content\images\close.png" />
+    <Content Include="Content\images\close1.png" />
+    <Content Include="Content\images\cloud.png" />
+    <Content Include="Content\images\coins message.png" />
+    <Content Include="Content\images\d01.png" />
+    <Content Include="Content\images\d02.png" />
+    <Content Include="Content\images\d03.png" />
+    <Content Include="Content\images\d04.png" />
+    <Content Include="Content\images\d05.png" />
+    <Content Include="Content\images\d06.png" />
+    <Content Include="Content\images\d07.png" />
+    <Content Include="Content\images\diskbg.png" />
+    <Content Include="Content\images\dp.png" />
+    <Content Include="Content\images\eocreport.png" />
+    <Content Include="Content\images\eocreport_l.png" />
+    <Content Include="Content\images\f01.png" />
+    <Content Include="Content\images\f02.png" />
+    <Content Include="Content\images\f03.png" />
+    <Content Include="Content\images\f04.png" />
+    <Content Include="Content\images\f05.png" />
+    <Content Include="Content\images\f06.png" />
+    <Content Include="Content\images\fjt.png" />
+    <Content Include="Content\images\help.png" />
+    <Content Include="Content\images\home.png" />
+    <Content Include="Content\images\iadd.png" />
+    <Content Include="Content\images\ibtnbg.png" />
+    <Content Include="Content\images\ico01.png" />
+    <Content Include="Content\images\ico02.png" />
+    <Content Include="Content\images\ico03.png" />
+    <Content Include="Content\images\ico04.png" />
+    <Content Include="Content\images\ico05.png" />
+    <Content Include="Content\images\ico06.png" />
+    <Content Include="Content\images\ico07.png" />
+    <Content Include="Content\images\ico08.png" />
+    <Content Include="Content\images\ico09.png" />
+    <Content Include="Content\images\ico10.png" />
+    <Content Include="Content\images\ico11.png" />
+    <Content Include="Content\images\icon.png" />
+    <Content Include="Content\images\icons.png" />
+    <Content Include="Content\images\info.png" />
+    <Content Include="Content\images\inputbg.gif" />
+    <Content Include="Content\images\itabbg.png" />
+    <Content Include="Content\images\itabbg1.png" />
+    <Content Include="Content\images\jtx.png" />
+    <Content Include="Content\images\leftico.png" />
+    <Content Include="Content\images\leftico01.png" />
+    <Content Include="Content\images\leftline.gif" />
+    <Content Include="Content\images\leftmenubg.gif" />
+    <Content Include="Content\images\lefttop.gif" />
+    <Content Include="Content\images\libg.png" />
+    <Content Include="Content\images\light.png" />
+    <Content Include="Content\images\light1.png" />
+    <Content Include="Content\images\line.gif" />
+    <Content Include="Content\images\line1.png" />
+    <Content Include="Content\images\list.gif" />
+    <Content Include="Content\images\list1.gif" />
+    <Content Include="Content\images\list2.png" />
+    <Content Include="Content\images\loginbg1.png" />
+    <Content Include="Content\images\loginbg2.png" />
+    <Content Include="Content\images\loginbg3.png" />
+    <Content Include="Content\images\loginbg4.png" />
+    <Content Include="Content\images\logininfo.png" />
+    <Content Include="Content\images\loginlogo.png" />
+    <Content Include="Content\images\loginlogo1.png" />
+    <Content Include="Content\images\loginlogo2.png" />
+    <Content Include="Content\images\loginsj.png" />
+    <Content Include="Content\images\logo_cz.png" />
+    <Content Include="Content\images\logo_cz_old.png" />
+    <Content Include="Content\images\logo_sz.png" />
+    <Content Include="Content\images\logo_wj.png" />
+    <Content Include="Content\images\logo_xz.png" />
+    <Content Include="Content\images\msg.png" />
+    <Content Include="Content\images\new.png" />
+    <Content Include="Content\images\next.gif" />
+    <Content Include="Content\images\czpingzhenglogo.jpg" />
+    <Content Include="Content\images\nom.jpg" />
+    <Content Include="Content\images\pre.gif" />
+    <Content Include="Content\images\print.png" />
+    <Content Include="Content\images\px.gif" />
+    <Content Include="Content\images\returncard_l.png" />
+    <Content Include="Content\images\reutrncard.png" />
+    <Content Include="Content\images\righttop.gif" />
+    <Content Include="Content\images\rlist.gif" />
+    <Content Include="Content\images\salecard.png" />
+    <Content Include="Content\images\salecard_l.png" />
+    <Content Include="Content\images\search.png" />
+    <Content Include="Content\images\staffreport.png" />
+    <Content Include="Content\images\staffreportdetail.png" />
+    <Content Include="Content\images\staffreportdetail_l.png" />
+    <Content Include="Content\images\staffreport_l.png" />
+    <Content Include="Content\images\sub-menu-icon.png" />
+    <Content Include="Content\images\sun.png" />
+    <Content Include="Content\images\t.png" />
+    <Content Include="Content\images\t01.png" />
+    <Content Include="Content\images\t02.png" />
+    <Content Include="Content\images\t03.png" />
+    <Content Include="Content\images\t04.png" />
+    <Content Include="Content\images\t05.png" />
+    <Content Include="Content\images\tbg.png" />
+    <Content Include="Content\images\tcbg.gif" />
+    <Content Include="Content\images\th.gif" />
+    <Content Include="Content\images\ticon.png" />
+    <Content Include="Content\images\time.png" />
+    <Content Include="Content\images\toolbg.gif" />
+    <Content Include="Content\images\tools.png" />
+    <Content Include="Content\images\topbg.gif" />
+    <Content Include="Content\images\topleft.png" />
+    <Content Include="Content\images\ub1.png" />
+    <Content Include="Content\images\uew_icon.png" />
+    <Content Include="Content\images\uew_icon_hover.png" />
+    <Content Include="Content\images\ulist.png" />
+    <Content Include="Content\images\unloak.png" />
+    <Content Include="Content\images\unlock_l.png" />
+    <Content Include="Content\images\user message.png" />
+    <Content Include="Content\images\user.png" />
+    <Content Include="Content\images\userbg.png" />
+    <Content Include="Content\images\xzsmk.png" />
+    <Content Include="Content\wx-icons.css" />
+    <Content Include="Content\wx.css" />
+    <Content Include="Content\PIE.htc" />
+    <Content Include="Content\print.html" />
+    <Content Include="Content\themes\color.css" />
+    <Content Include="Content\themes\icon.css" />
+    <Content Include="Content\images\excel.png" />
+    <Content Include="Content\themes\icons\back.png" />
+    <Content Include="Content\themes\icons\blank.gif" />
+    <Content Include="Content\themes\icons\cancel.png" />
+    <Content Include="Content\themes\icons\clear.png" />
+    <Content Include="Content\themes\icons\cut.png" />
+    <Content Include="Content\themes\icons\edit_add.png" />
+    <Content Include="Content\themes\icons\edit_remove.png" />
+    <Content Include="Content\themes\icons\filesave.png" />
+    <Content Include="Content\themes\icons\filter.png" />
+    <Content Include="Content\themes\icons\help.png" />
+    <Content Include="Content\themes\icons\large_chart.png" />
+    <Content Include="Content\themes\icons\large_clipart.png" />
+    <Content Include="Content\themes\icons\large_picture.png" />
+    <Content Include="Content\themes\icons\large_shapes.png" />
+    <Content Include="Content\themes\icons\large_smartart.png" />
+    <Content Include="Content\themes\icons\lock.png" />
+    <Content Include="Content\themes\icons\man.png" />
+    <Content Include="Content\themes\icons\mini_add.png" />
+    <Content Include="Content\themes\icons\mini_edit.png" />
+    <Content Include="Content\themes\icons\mini_refresh.png" />
+    <Content Include="Content\themes\icons\no.png" />
+    <Content Include="Content\themes\icons\ok.png" />
+    <Content Include="Content\themes\icons\pencil.png" />
+    <Content Include="Content\themes\icons\print.png" />
+    <Content Include="Content\themes\icons\redo.png" />
+    <Content Include="Content\themes\icons\reload.png" />
+    <Content Include="Content\themes\icons\search.png" />
+    <Content Include="Content\themes\icons\sum.png" />
+    <Content Include="Content\themes\icons\tip.png" />
+    <Content Include="Content\themes\icons\undo.png" />
+    <Content Include="Content\themes\metro\accordion.css" />
+    <Content Include="Content\themes\metro\calendar.css" />
+    <Content Include="Content\themes\metro\combo.css" />
+    <Content Include="Content\themes\metro\combobox.css" />
+    <Content Include="Content\themes\metro\datagrid.css" />
+    <Content Include="Content\themes\metro\datalist.css" />
+    <Content Include="Content\themes\metro\datebox.css" />
+    <Content Include="Content\themes\metro\dialog.css" />
+    <Content Include="Content\themes\metro\easyui.css" />
+    <Content Include="Content\themes\metro\filebox.css" />
+    <Content Include="Content\themes\metro\images\accordion_arrows.png" />
+    <Content Include="Content\themes\metro\images\blank.gif" />
+    <Content Include="Content\themes\metro\images\calendar_arrows.png" />
+    <Content Include="Content\themes\metro\images\combo_arrow.png" />
+    <Content Include="Content\themes\metro\images\datagrid_icons.png" />
+    <Content Include="Content\themes\metro\images\datebox_arrow.png" />
+    <Content Include="Content\themes\metro\images\layout_arrows.png" />
+    <Content Include="Content\themes\metro\images\linkbutton_bg.png" />
+    <Content Include="Content\themes\metro\images\loading.gif" />
+    <Content Include="Content\themes\metro\images\menu_arrows.png" />
+    <Content Include="Content\themes\metro\images\messager_icons.png" />
+    <Content Include="Content\themes\metro\images\pagination_icons.png" />
+    <Content Include="Content\themes\metro\images\panel_tools.png" />
+    <Content Include="Content\themes\metro\images\searchbox_button.png" />
+    <Content Include="Content\themes\metro\images\slider_handle.png" />
+    <Content Include="Content\themes\metro\images\spinner_arrows.png" />
+    <Content Include="Content\themes\metro\images\tabs_icons.png" />
+    <Content Include="Content\themes\metro\images\tree_icons.png" />
+    <Content Include="Content\themes\metro\images\validatebox_warning.png" />
+    <Content Include="Content\themes\metro\layout.css" />
+    <Content Include="Content\themes\metro\linkbutton.css" />
+    <Content Include="Content\themes\metro\menu.css" />
+    <Content Include="Content\themes\metro\menubutton.css" />
+    <Content Include="Content\themes\metro\messager.css" />
+    <Content Include="Content\themes\metro\numberbox.css" />
+    <Content Include="Content\themes\metro\pagination.css" />
+    <Content Include="Content\themes\metro\panel.css" />
+    <Content Include="Content\themes\metro\progressbar.css" />
+    <Content Include="Content\themes\metro\propertygrid.css" />
+    <Content Include="Content\themes\metro\searchbox.css" />
+    <Content Include="Content\themes\metro\slider.css" />
+    <Content Include="Content\themes\metro\spinner.css" />
+    <Content Include="Content\themes\metro\splitbutton.css" />
+    <Content Include="Content\themes\metro\tabs.css" />
+    <Content Include="Content\themes\metro\textbox.css" />
+    <Content Include="Content\themes\metro\tooltip.css" />
+    <Content Include="Content\themes\metro\tree.css" />
+    <Content Include="Content\themes\metro\validatebox.css" />
+    <Content Include="Content\themes\metro\window.css" />
+    <Content Include="Content\welcome.css" />
+    <Content Include="Global.asax" />
+    <Content Include="HtmlError.html" />
+    <Content Include="Scripts\cardreaderhelper.js" />
+    <Content Include="Scripts\WJCardPrintPhoto.js" />
+    <Content Include="Scripts\wjprint.js" />
+    <Content Include="Scripts\jquery-form.js" />
+    <Content Include="Scripts\reporthelper.js" />
+    <Content Include="Scripts\common.js" />
+    <Content Include="Scripts\locale\easyui-lang-en.js" />
+    <Content Include="Scripts\locale\easyui-lang-zh_CN.js" />
+    <Content Include="Scripts\locale\easyui-lang-zh_TW.js" />
+    <Content Include="Scripts\wx.cardreaderImpl.js" />
+    <Content Include="Scripts\plugins\datagrid-detailview.js" />
+    <Content Include="Scripts\plugins\datagrid-filter.js" />
+    <Content Include="Scripts\plugins\datagrid-scrollview.js" />
+    <Content Include="Scripts\szprint.js" />
+    <Content Include="Scripts\czprint.js" />
+    <Content Include="Scripts\icOrderPrint.js" />
+    <Content Include="Scripts\xzprint.js" />
+    <Content Include="WhichServer.html" />
+    <Content Include="Scripts\jquery-1.11.1.min.map" />
+    <Content Include="Scripts\easyloader.js" />
+    <Content Include="Content\images\Thumbs.db" />
+    <Content Include="Content\tree_data.json" />
+    <None Include="Properties\PublishProfiles\onecard_v3.pubxml" />
+    <None Include="Scripts\jquery-1.11.1.intellisense.js" />
+    <Content Include="Scripts\jquery-1.11.1.js" />
+    <Content Include="Scripts\jquery-1.11.1.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.easyui-1.4.1.js" />
+    <Content Include="Scripts\jquery.easyui.min-1.4.1.js" />
+    <None Include="Scripts\jquery.linq-vsdoc.js" />
+    <Content Include="Scripts\jquery.linq.js" />
+    <Content Include="Scripts\jquery.linq.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\json2.js" />
+    <Content Include="Scripts\json2.min.js" />
+    <Content Include="Scripts\wx.data.js" />
+    <Content Include="Scripts\wx.easyui.js" />
+    <Content Include="Scripts\wx.global.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\Welcome.cshtml" />
+    <Content Include="Views\Shared\CardBusiness\_CardInfoPanel.cshtml" />
+    <Content Include="Views\Shared\_CardBusinessLayout.cshtml" />
+    <Content Include="Views\Shared\CardBusiness\_CardInfoPanelScript.cshtml" />
+    <Content Include="Views\Shared\CardBusiness\_AccountInfoPanel.cshtml" />
+    <Content Include="Views\Shared\CardBusiness\_AccountInfoPanelScript.cshtml" />
+    <Content Include="Views\Shared\CardBusiness\_BusinessPanel.cshtml" />
+    <Content Include="Views\Shared\CardBusiness\_BusinessPanelScript.cshtml" />
+    <Content Include="Views\Shared\_ReportLayout.cshtml" />
+    <Content Include="Views\Home\CardTest.cshtml" />
+    <Content Include="Views\Shared\_CURDLayout.cshtml" />
+    <Content Include="Views\PrivilegePR\PrStaffConfig.cshtml" />
+    <Content Include="Views\PrivilegePR\PrDepartConfig.cshtml" />
+    <Content Include="Views\PrivilegePR\PrRoleConfig.cshtml" />
+    <Content Include="Views\PrivilegePR\PrStaffRoleConfig.cshtml" />
+    <Content Include="Views\PrivilegePR\PrRolePriConfig.cshtml" />
+    <Content Include="Scripts\tree_data.json" />
+    <Content Include="Views\PrivilegePR\tree_data.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Content\tmp\" />
+    <Folder Include="Files\" />
+    <Folder Include="Model\" />
+    <Folder Include="OCX\" />
+    <Folder Include="Tools\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WeChat.Dtos\WeChat.Dtos.csproj">
+      <Project>{B0AD5B02-330E-4D0E-8094-2F39C6BED1E6}</Project>
+      <Name>WeChat.Dtos</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wx.Utility\Wx.Utility.csproj">
+      <Project>{eab455b3-f4cb-4c03-91bb-166d9bd4753e}</Project>
+      <Name>Wx.Utility</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Wx.Web.Core\Wx.WEB.Core.csproj">
+      <Project>{788472ac-5375-4de7-a745-ab7874740dd1}</Project>
+      <Name>Wx.WEB.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>54723</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:19999/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

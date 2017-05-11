@@ -1,0 +1,349 @@
+﻿@{
+    ViewBag.Title = "角色权限";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model Wx.WEB.Core.ViewModels.GridBusinessRule
+@{
+    var roles = ViewBag.Roles == null ? "{}" : ViewBag.Roles;
+}
+<div class="infos">
+    <ul id="infos"></ul>
+</div>
+<div class="btnList">
+    <span style="font-size:12px">角色名称：</span>
+    <select class="easyui-combobox" name="ROLENO" id="ROLENO" data-options="valueField:'ROLENO',textField:'ROLENAME',data:@roles,onSelect:function(rec){changeRole(rec.ROLENO);},editable:false" style="width:120px;"></select>
+    <a id="btnSetPri" href="javascript:void(0);" data-options="iconCls:'icon-search',width:80,onClick:SetPrivilege" class="easyui-linkbutton" style="">设置</a>
+</div>
+<hr style="clear:both;" />
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'west'" style="width:50%;padding:10px">
+        <div class="easyui-panel" title="菜单项" style="width:100%;height:400px;" data-options="collapsible:true,border:true">
+            <ul id="tree-@Model.GridId"></ul>
+        </div>
+    </div>
+    <div data-options="region:'center'" style="width:50%;padding:10px">
+        <div id="grid-@Model.GridId"></div>
+    </div>
+</div>
+
+@section footer{
+    <script type="text/javascript">
+        var rownumbers = true,
+            singleSelect = false,
+            checkbox = true,
+            multiSort = false,
+            pageSize = 25,
+            tradeType = null,
+            fitColumns = true,
+            frozenColumns = [[]],
+            columns = [[]],
+            filterData = [],
+            enableFilterData = false,
+            editIndex = undefined,
+            selectOnCheck = true,
+            checkOnSelect = true,
+            columnMenu = undefined,
+            submitURL = null,
+            submitModel = {},
+            submitRequest = {},
+            printInfo = {};
+
+        var endfunction = function() {};
+        var searchCustomerFunc = function() {};
+        var replaceSearchField = function(field) {
+            return field;
+        };
+        var bindSubmitRequest = function(query) {};
+
+        var permmitfunction = function() {};
+        customloadSuccess = function(data) {
+            if (data.rows.length > 0) {
+                for (var i = 0; i < data.rows.length; i++) {
+                    //根据operate让某些行不可选
+                    if (data.rows[i].CHECKSTATE == "1") {
+                        $("input[type='checkbox']")[i + 1].checked = true;
+                    }
+                }
+            }
+        }
+        var clickRow = function(rowIndex, rowData) {
+
+        };
+
+        columns = [
+            [
+                { field: "CHK", title: "选定", width: 15, align: "center", checkbox: true },
+                { field: "POWERCODE", title: "权限ID", width: 100, align: "center" },
+                { field: "POWERNAME", title: "操作权限名称", width: 100, align: "center" },
+                { field: "REMARK", title: "备注", width: 100, align: "center" },
+                { field: "CHECKSTATE", hidden: true }
+            ]
+        ];
+
+        $(function() {
+            $("#tree-@Model.GridId").tree({
+                url: "@Model.TreeUrl",
+                checkbox: true,
+                loadFilter: treeLoadFilter,
+                height: "@Model.GridHeight",
+                onClick: function(node) {
+                    alert(node.id + node.pid);
+                }
+            });
+
+            var grid = $("#grid-@Model.GridId").datagrid({
+                title: "@Model.Title",
+                fit: @Model.FitGrid,
+                height: "@Model.GridHeight",
+                frozenColumns: [[]],
+                columns: columns,
+                fitColumns: true,
+                ctrlSelect: false,
+                url: "@(Model.AutoSearch ? @Model.GridDataUrl : "")",
+                loadMsg: "正在加载数据，请稍候",
+                rownumbers: true,
+                singleSelect: singleSelect,
+                selectOnCheck: selectOnCheck,
+                checkOnSelect: checkOnSelect,
+                multiSort: multiSort,
+                pagination: "@Model.IsPaging",
+                pageSize: pageSize,
+                pageList: [10, 25, 50, 100, 200],
+                remoteFilter: true,
+                onBeforeLoad: beforeLoad,
+                loadFilter: loadFilter,
+                onLoadError: loadError,
+                showFooter: false,
+                onClickRow: selectRow,
+                onLoadSuccess: loadSuccess
+            });
+        });
+
+        function treeLoader(param, success, error) {
+
+        }
+
+        function treeLoadFilter(data) {
+            if (data.ResponseStatus.ErrorCode != undefined && data.ResponseStatus.ErrorCode != "OK") {
+                var errors = '';
+                $.each(data.ResponseStatus.Errors, function(i, o) {
+                    errors = errors + "<li>" + (o.ErrorCode != null ? o.ErrorCode + ':' : '') + o.Message + "</li>";
+                });
+                $.wx.easyui.msg.error(errors, '错误');
+                return data;
+            }
+            if (data.Menus != undefined) {
+                data = data.Menus;
+            }
+            setTimeout(function() { $.messager.progress('close'); }, 1000);
+            return data;
+        }
+
+        function onTreeBeforeLoad(node, param) {
+
+        }
+
+        SetPrivilege = function() {
+            var errs = '';
+            //获取菜单项
+            var roleId = $('#ROLENO').textbox('getValue');
+            if (roleId == "") {
+                errs = errs + "<li>" + "请选择角色" + "</li>";
+            }
+            var menus = $('#tree-@Model.GridId').tree('getChecked');
+            var menusTmp = [];
+            var i;
+            for (i = 0; i < menus.length; i++) {
+                menusTmp[i] = menus[i].id;
+            }
+
+            //获取操作权限
+            var ids = [];
+            var selectRows = $("#grid-@Model.GridId").datagrid('getRows');
+            for (i = 0; i < selectRows.length; i++) {
+                //根据operate让某些行不可选
+                if ($("input[type='checkbox']")[i + 1].checked) {
+                    ids[ids.length] = selectRows[i].POWERCODE;
+                }
+            }
+
+            if (errs != '') {
+                $.wx.easyui.msg.error(errs);
+                return;
+            }
+            var params = { "menus": menusTmp, "handles": ids, "roleId": roleId };
+
+            $.ajax({
+                type: "POST",
+                url: "@Model.EditUrl",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(params),
+                datatype: 'text  json',
+                success: function(result) {
+                    if (result) {
+                        if (result.ResponseStatus.ErrorCode === 'OK') {
+                            $.wx.easyui.info.success('权限设置成功');
+                            setTimeout(function() { $.messager.progress('close'); }, 1000);
+
+                        } else {
+                            var errors = '';
+                            $.each(result.ResponseStatus.Errors, function(i, o) {
+                                errors = errors + "<li>" + (o.ErrorCode != null ? o.ErrorCode + ':' : '') + o.Message + "</li>";
+                            });
+                            $.wx.easyui.msg.error(errors, '错误');
+                        }
+                    }
+                },
+                error: function(xmlHttpRequest, textStatus, errorThrown) {
+                    var result = JSON.parse(xmlHttpRequest.responseText);
+                    if (result.ResponseStatus.ErrorCode === 'OK') {
+                        $.wx.easyui.info.success('权限设置成功');
+                        setTimeout(function() { $.messager.progress('close'); }, 1000);
+
+                    } else {
+                        var errors = '';
+                        $.each(result.ResponseStatus.Errors, function(i, o) {
+                            errors = errors + "<li>" + (o.ErrorCode != null ? o.ErrorCode + ':' : '') + o.Message + "</li>";
+                        });
+                        $.wx.easyui.msg.error(errors, '错误');
+                    }
+                }
+            });
+        }
+
+        function changeRole(role) {
+            $.wx.easyui.info.clear();
+            $.messager.progress({ title: '正在处理中', msg: '正在处理中...' });
+            var query = { roleId: role };
+            var param = JSON.stringify(query);
+            $.ajax({
+                type: "POST",
+                url: "@Model.TreeUrl",
+                contentType: 'application/json; charset=utf-8',
+                data: param,
+                datatype: 'text  json',
+                success: function(result) {
+                    $("#tree-@Model.GridId").tree({
+                        url: "",
+                        data: result
+                    });
+                },
+                error: function(xmlHttpRequest, textStatus, errorThrown) {
+                    console.log(xmlHttpRequest.responseText);
+                    var data = JSON.parse(xmlHttpRequest.responseText);
+                    $("#tree-@Model.GridId").tree({
+                        url: "",
+                        data: data
+                    });
+                    $.messager.progress('close');
+                },
+            });
+            $.ajax({
+                type: "POST",
+                url: "@Model.GridDataUrl",
+                contentType: 'application/json; charset=utf-8',
+                data: param,
+                datatype: 'text  json',
+                success: function(result) {
+                    $("#grid-@Model.GridId").datagrid({ url: "", data: result });
+                },
+                error: function(xmlHttpRequest, textStatus, errorThrown) {
+                    var data = JSON.parse(xmlHttpRequest.responseText);
+                    $("#grid-@Model.GridId").datagrid({ url: "", data: data });
+                },
+            });
+
+        }
+
+
+        function beforeLoad(param) {
+            if (param.page) {
+                param.pageIndex = param.page;
+                delete param.page;
+            }
+            if (param.rows) {
+                param.pageSize = param.rows;
+                delete param.rows;
+            }
+            if (param.sort) {
+                var array = param.sort.split(',');
+                for (var i = 0; i < array.length; i++) {
+                    var field = array[i];
+                    array[i] = replaceSearchField(field);
+                }
+                param.sort = $.wx.tools.array.expandAndToString(array, ",");
+                param.sortField = param.sort;
+                delete param.sort;
+            }
+            if (param.order) {
+                param.sortOrder = param.order;
+                delete param.order;
+            }
+        }
+
+        function loadFilter(data) {
+            if (data.ResponseStatus.ErrorCode != undefined && data.ResponseStatus.ErrorCode != "OK") {
+                var errors = '';
+                $.each(data.ResponseStatus.Errors, function(i, o) {
+                    errors = errors + "<li>" + (o.ErrorCode != null ? o.ErrorCode + ':' : '') + o.Message + "</li>";
+                });
+                $.wx.easyui.msg.error(errors, '错误');
+                data.rows = [];
+                data.total = 0;
+                return data;
+            }
+            if (data.QueryData != undefined) {
+                data = data.QueryData;
+            }
+            if (data.Reports != undefined) {
+                data = data.Reports;
+            }
+            if (data.Rows != undefined && data.Total != undefined) {
+                data.rows = data.Rows;
+                data.total = data.Total;
+                delete data.Rows;
+                delete data.Total;
+            }
+            setTimeout(function() { $.messager.progress('close'); }, 1000);
+            return data;
+        }
+
+        function pagerFilter(data) {
+            data = loadFilter(data);
+            var dg = $(this);
+            var opts = dg.datagrid('options');
+            var pager = dg.datagrid('getPager');
+            pager.pagination({
+                onSelectPage: function(pageNum, pageSize) {
+                    opts.pageNumber = pageNum;
+                    opts.pageSize = pageSize;
+                    pager.pagination('refresh', {
+                        pageNumber: pageNum,
+                        pageSize: pageSize
+                    });
+                    dg.datagrid('loadData', data);
+                }
+            });
+            if (!data.originalRows) {
+                data.originalRows = (data.rows);
+            }
+            var start = (opts.pageNumber - 1) * parseInt(opts.pageSize);
+            var end = start + parseInt(opts.pageSize);
+            data.rows = (data.originalRows.slice(start, end));
+            return data;
+        }
+
+        function loadSuccess(data) {
+            customloadSuccess(data);
+        }
+
+        function selectRow(rowIndex, rowData) {
+            clickRow(rowIndex, rowData);
+        }
+
+        function loadError() {
+            $.wx.easyui.msg.error("远程数据载入失败，请重试或检查参数。");
+        }
+    </script>
+}
+）

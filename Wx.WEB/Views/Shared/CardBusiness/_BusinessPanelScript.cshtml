@@ -1,0 +1,133 @@
+﻿@using Wx.WEB.Core.ViewModels
+
+@model CardBusinessRule
+
+@{
+    string costList = string.IsNullOrEmpty(@Model.CostList) ? "[]" : @Model.CostList;
+}
+
+<script type="text/javascript">
+    costList = @Html.Raw(costList);
+    BindCostList= function()
+    {
+        $('#costList').empty();
+        $.each(costList,function(i,o){
+            var money = (parseFloat(o.BASEFEE)/100).toFixed(2);
+            $('#costList').append("<div class=\"list\"><span>"+o.FEETYPENAME+"：</span><em class=\"price\" id=\"warePriceId\">￥"+money+"</em></div>");
+        });
+    }
+    submitRequest = @Html.Raw(Model.SubmitRquest) ;
+    BeginSubmitFunc = function () {
+        var ret = @Html.Raw(Model.BeginSubmitFunc)
+        if(ret  === false){
+            return false;
+        }
+        return true;
+    }
+    var isSubmit;
+    EndSubmitFunc = function () {
+        @Html.Raw(Model.EndSubmitFunc)
+        isSubmit=true;
+        setTimeout(function(){$.messager.progress('close')}, 1000);
+        if( '@Html.Raw(Model.EndSubmitFunc)'=="")
+        {
+            if($("#AutoCheck").is(":checked"))
+            {
+                CreatePrintPage();
+                isSubmit=false;
+            }
+        }
+
+    }
+    WriteCardSuccFunc=function(){
+        if(isSubmit==true){
+            if($("#AutoCheck").is(":checked"))
+            {
+                CreatePrintPage();
+                isSubmit=false;
+            }
+        }
+    }
+
+    SubmitFunc = function (skipBeginFunc) {
+        $.wx.easyui.info.clear();
+        $.messager.progress({ title: '正在处理中', msg: '正在处理中...' });
+        if(!skipBeginFunc)  {
+            if(!BeginSubmitFunc()){
+                return false;
+            }
+        }
+        //console.log(JSON.stringify(submitRequest));
+        if(submitRequest != null){
+            $.ajax({ type: "POST",
+                url:"@Url.Action(Model.SubmitFunc)",
+                contentType: 'application/json; charset=utf-8',
+                data:JSON.stringify(submitRequest),
+                success :function (result) {
+                    if(result){
+                        //readCardResponse = result;
+                        if(result.ResponseStatus.ErrorCode === 'OK'){
+                            $.wx.easyui.info.success('@Model.TradeName' + '成功');
+                            var messages = result.ResponseStatus.Message;
+                            if(messages) {
+                                $.each(messages.split('|'),function(i,o){
+                                    $.wx.easyui.info.success(o);
+                                });
+                            }
+                            $('#btnSubmit').linkbutton('disable');
+                            $('#btnPrint').linkbutton('enable');
+                            readCardRequest = @Html.Raw(Model.ReadCardRquest) ;
+                            submitRequest = @Html.Raw(Model.SubmitRquest) ;
+                            if(result.TradeID){
+                                $('#hideTradeID').val(result.TradeID);
+                            }
+                            if(result.ID){
+                                $('#hideID').val(result.ID);
+                            }
+                            BindPrintInfo();
+                            if( $('#hidIsReadDB').val()=="true")
+                            {
+                                setTimeout(function(){$.messager.progress('close')}, 1000);
+                                if($("#AutoCheck").is(":checked"))
+                                {
+                                    CreatePrintPage();
+                                    isSubmit=false;
+                                }
+                            }
+                            else
+                            {
+                                EndSubmitFunc();
+                            }
+                            $('#hideIsReadIDCard').val('0');
+                            $('#hideCardNo').val('');
+                            $('#hideMoney').val('');
+                        }
+                        else
+                        {
+                            var errors ='';
+                            $.each(result.ResponseStatus.Errors,function(i,o){
+                                errors = errors + "<li>"+ (o.ErrorCode != null ? o.ErrorCode + ':':'') +  o.Message +"</li>";
+                            });
+                            $.wx.easyui.msg.error(errors,'错误');
+                        }
+                    }
+                    //console.log(result);
+                }});
+        }
+        else{
+            if( $('#hidIsReadDB').val()=="true")
+            {
+                setTimeout(function(){$.messager.progress('close')}, 1000);
+            }
+            else
+            {
+                EndSubmitFunc();
+            }
+            $('#btnSubmit').linkbutton('disable');
+            $('#hideIsReadIDCard').val('0');
+            $('#hideCardNo').val('');
+            $('#hideMoney').val('');
+        }
+    }
+
+</script>

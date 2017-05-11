@@ -1,0 +1,14 @@
+D:\WorkSpace\C#\Wx\WeChat.Dtos\bin\Debug\WeChat.Dtos.dll
+D:\WorkSpace\C#\Wx\WeChat.Dtos\bin\Debug\WeChat.Dtos.pdb
+D:\WorkSpace\C#\Wx\WeChat.Dtos\bin\Debug\ServiceStack.Client.dll
+D:\WorkSpace\C#\Wx\WeChat.Dtos\bin\Debug\ServiceStack.Common.dll
+D:\WorkSpace\C#\Wx\WeChat.Dtos\bin\Debug\ServiceStack.dll
+D:\WorkSpace\C#\Wx\WeChat.Dtos\bin\Debug\ServiceStack.Interfaces.dll
+D:\WorkSpace\C#\Wx\WeChat.Dtos\bin\Debug\ServiceStack.Text.dll
+D:\WorkSpace\C#\Wx\WeChat.Dtos\bin\Debug\ServiceStack.xml
+D:\WorkSpace\C#\Wx\WeChat.Dtos\bin\Debug\ServiceStack.Client.xml
+D:\WorkSpace\C#\Wx\WeChat.Dtos\bin\Debug\ServiceStack.Common.xml
+D:\WorkSpace\C#\Wx\WeChat.Dtos\bin\Debug\ServiceStack.Text.xml
+D:\WorkSpace\C#\Wx\WeChat.Dtos\obj\Debug\WeChat.Dtos.dll
+D:\WorkSpace\C#\Wx\WeChat.Dtos\obj\Debug\WeChat.Dtos.pdb
+D:\WorkSpace\C#\Wx\WeChat.Dtos\obj\Debug\WeChat.Dtos.csprojResolveAssemblyReference.cache

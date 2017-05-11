@@ -1,0 +1,103 @@
+﻿@using Wx.WEB.Core.ViewModels
+@model Wx.WEB.Core.ViewModels.GridBusinessRule
+@{
+    Layout = "~/Views/Shared/_CURDLayout.cshtml";
+    var staffList = ViewBag.Staffs == null ? "{}" : ViewBag.Staffs;
+    var departList = ViewBag.Departs == null ? "{}" : ViewBag.Departs;
+}
+@section customScript{
+    <script src="~/Scripts/common.js"></script>
+    <script type="text/javascript">
+        var staffListInfo = @Html.Raw(staffList);
+        columns = [
+            [
+                { field: "STAFFNO", title: "员工编码", width: 80, align: "center" },
+                { field: "STAFFNAME", title: "员工姓名", width: 80, align: "center" },
+                { field: "DEPARTNAME", title: "部门名称", width: 80, align: "center" },
+                { field: "DIMISSIONTAG", title: "是否离职", width: 80, align: "center" },
+                { field: "DEPARTNO", hidden: true }
+            ]
+        ];
+        singleSelect = true;
+
+        bindSubmitRequest = function() {
+            if (submitRequest) {
+                var selectRows = grid.datagrid("getSelections");
+                var ids = $.Enumerable.From(selectRows).Select(function(m) { return m.@Model.PrimaryKey; }).ToArray();
+                submitRequest.ids = ids;
+            }
+        };
+
+        function loadError() {
+            $.onecard.easyui.msg.error("远程数据载入失败，请重试或检查参数。");
+        }
+    </script>
+}
+
+@section searchHmtl{
+    <table cellpadding="5">
+        <tr>
+            <td>部门:</td>
+            <td>
+                <select class="easyui-combobox" name="SearchDeptID" id="SearchDeptID" data-options="valueField:'DEPARTNO',textField:'DEPARTNAME',data:@departList,onSelect:function(rec){changeDepart(rec.DEPARTNO,'SearchStaffNo');},editable:false" style="width:120px;"></select>
+            </td>
+            <td>员工:</td>
+            <td>
+                <select class="easyui-combobox" name="SearchStaffNo" id="SearchStaffNo" data-options="valueField:'STAFFNO',textField:'STAFFNAME',data:@staffList,editable:false" style="width:120px;"></select>
+            </td>
+        </tr>
+    </table>
+}
+
+@section detailHmtl{
+    <table cellpadding="5">
+        <tr>
+            <td>
+                <div align="right">
+                    员工编码:
+                </div>
+            </td>
+            <td>
+                <input class="easyui-textbox" type="text" name="STAFFNO" id="STAFFNO" style="width: 120px;" data-options="validType:'length[6,6]'">
+                <span class="red">*</span>
+            </td>
+            <td>
+                <div align="right">
+                    员工姓名:
+                </div>
+            </td>
+            <td>
+                <input class="easyui-textbox" type="text" name="STAFFNAME" id="STAFFNAME" style="width: 120px;" data-options="validType:'length[1,20]'">
+                <span class="red">*</span>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <div align="right">
+                    部门名称:
+                </div>
+            </td>
+            <td>
+                <select class="easyui-combobox" name="DEPARTNO" id="DEPARTNO" data-options="valueField:'DEPARTNO',textField:'DEPARTNAME',data:@departList,editable:false" style="width:120px;"></select>
+                <span class="red">*</span>
+            </td>
+            <td>
+                <div align="right">
+                    是否离职:
+                </div>
+            </td>
+            <td>
+                <select class="easyui-combobox" name="DIMISSIONTAG" id="DIMISSIONTAG" style="width: 120px;">
+                    <option value="">-请选择-</option>
+                    <option value="1">1:在职</option>
+                    <option value="0">0:离职</option>
+                </select>
+                <span class="red">*</span>
+            </td>
+        </tr>
+    </table>
+}
+
+
+
+

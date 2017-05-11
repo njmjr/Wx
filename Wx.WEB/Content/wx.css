@@ -1,0 +1,163 @@
+﻿#main-nav .panel-title {
+    font-weight: normal;
+}
+
+#main-nav .accordion-header-selected {
+    background: #f3f3f3;
+}
+
+    #main-nav .accordion-header-selected .panel-title {
+        font-weight: bold;
+        color: #575765;
+    }
+
+#main-nav .tree-icon {
+    margin-top: 5px;
+}
+
+#main-nav .tree-hit {
+    margin-top: 4px;
+}
+
+#main-nav .tree-node {
+    height: 26px;
+}
+
+#main-nav .tree-title {
+    line-height: 26px;
+}
+
+.table ul {
+    list-style: none;
+}
+
+.table li {
+    float: left;
+    width: 20%;
+    margin-top: 3px;
+}
+
+.panel {
+    margin-top:5px;
+}
+
+
+
+.statistic {
+    width: 300px;
+    margin-bottom: 10px;
+    margin-right: 20px;  
+}
+
+.fr {
+    float: right;
+}
+ 
+.fl {
+    float: left;
+}
+
+.statistic .list {
+    height: 24px;
+    line-height: 24px;
+    overflow: hidden;
+    margin-bottom: 5px;
+    zoom: 1;
+}
+
+.statistic .price {
+    color: #333;
+    float: left;
+    width: 100px;
+    text-align: right;
+    font-family: verdana;
+}
+
+.statistic span {
+    width: 150px;
+    margin-right: 20px;
+    float: left;
+    text-align: right;
+}
+
+.submit {
+    background: #ff6a00;
+    border: 1px solid #ff6a00;
+    background: -webkit-linear-gradient(top,#f83a0f 0,#f83a0f 100%);
+    background: -moz-linear-gradient(top,#f83a0f 0,#f83a0f 100%);
+    background: -o-linear-gradient(top,#f83a0f 0,#f83a0f 100%);
+    background: linear-gradient(to bottom,#f83a0f 0,#f83a0f 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#f83a0f,endColorstr=#f83a0f,GradientType=0);
+}
+
+.infos {
+    font-size: 12px;
+    line-height: 1.42857143;
+}
+
+.error {
+    font-size: 12px;
+    line-height: 1.42857143;
+}
+
+.tradeParameter { 
+  margin-top:20px;
+}
+
+.tradeParameter .easyui-linkbutton {
+    margin-right:10px
+}
+
+.btnList {
+    float:right;
+    margin-bottom:10px;
+}
+
+.inputList {
+    float:left;
+    margin-bottom:10px;
+}
+
+.layout-panel-north,.layout-panel-west,.layout-panel-center{
+    margin-top:0;
+} 
+
+/*top.html*/
+.header{height:88px;}
+.topleft{height:88px;background:url(images/topleft.png) no-repeat;float:left; width:550px;}
+.topleft img{margin-top:13px;}
+.topright{height:88px;float:right;}
+.topright ul {
+  display: block;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.topright li span{ margin-right:20px; color:#444; word-spacing:5px;}
+.nav{float:left; position: absolute; right:280px;}
+.nav li{float:left;width:87px;height:88px; text-align:center;}
+.nav li a{display:block;width:87px;height:88px;-moz-transition: none; transition: background-color 0.3s linear; -moz-transition: background-color 0.3s linear; -webkit-transition: background-color 0.3s linear; -o-transition: background-color 0.3s linear; }
+.nav li a.selected{background:url(images/navbg.png) no-repeat;}
+.nav li a:hover{display:block;background:#000;color:#fff;background: none repeat scroll 0% 0% rgb(43, 127, 181);}
+.nav li img{margin-top:10px;}
+.nav li a{display:block;}
+.nav a h2{font-size:14px;color:#d6e8f1;}
+.nav a:hover h2{color:#fff;}
+.topright ul{padding-top:15px; float:right; padding-right:12px;}
+.topright ul li{float:left; padding-left:9px; padding-right:9px; background:url(images/line.gif) no-repeat right;}
+.topright ul li:last-child{background:none;}
+.topright ul li a{font-size:13px; color:#e9f2f7;}
+.topright ul li a:hover{color:#fff;}
+.topright ul li span{margin-top:2px;float:left;padding-right:3px;}
+.user{height:30px;background:url(images/ub1.png) repeat-x;clear:both;margin-top:15px;float:right; margin-right:12px;border-radius:30px;
+       behavior:url(content/pie.htc); white-space:nowrap;position:relative;}
+.user span{display:inline-block;padding-right:10px; background:url(images/user.png) no-repeat 15px 10px; line-height:30px; font-size:14px;color:#555; padding-left:35px; padding-left:35px;}
+
+/*left.html*/
+.lefttop{background:url(images/lefttop.gif) repeat-x;}
+.lefttop .panel-title{color:#fff;}
+.lefttop .panel-with-icon{color:#fff;}
+.lefttop .panel-tool {padding-left: 30px;}
+#main-nav .panel {  margin-top: 0;} 
+ 

@@ -1,0 +1,28 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/themes/metro/easyui.css" rel="stylesheet" />
+    <link href="~/Content/themes/icon.css" rel="stylesheet" />
+    <link href="~/Content/wx-icons.css" rel="stylesheet" />
+    <link href="~/Content/wx.css" rel="stylesheet" />  
+    <script src="~/Scripts/jquery-1.11.1.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery.easyui.min-1.4.1.js"></script>
+    <script src="~/Scripts/locale/easyui-lang-zh_CN.js" type="text/javascript"></script> 
+    <script src="~/Scripts/jquery.linq.js" type="text/javascript"></script>
+    <script src="~/Scripts/json2.js" type="text/javascript"></script>
+    <script src="~/Scripts/Wx.global.js" type="text/javascript"></script>
+    <script src="~/Scripts/Wx.easyui.js" type="text/javascript"></script>
+    <script src="~/Scripts/Wx.data.js" type="text/javascript"></script>  
+    @RenderSection("header", false)
+</head>
+<body>
+    @RenderBody()
+    @RenderSection("footer", false) 
+</body>
+</html>

@@ -1,0 +1,60 @@
+﻿@using Wx.WEB.Core.ViewModels
+
+@model CardBusinessRule
+@{
+    string testModel = Session["type"] == "test" ? "true" : "false";
+}
+<div class="btnList">
+    @if (Model.IsShowReasonType)
+    {
+        <span>退换卡原因：</span>
+        <select class="easyui-combobox" name="ReasonCode" id="ReasonCode" data-options="valueField:'REASONCODE',textField:'REASON',data:@ViewBag.ReasonTypes" style="width:151px;"></select>
+    }
+
+     @if (Model.IsShowReadCardButton)
+    {
+        <a id="btnReadCard" href="javascript:void(0);" data-options="iconCls:'icon-search',width:80,onClick:ReadCardFunc" class="easyui-linkbutton" style="">读卡</a>
+        <input type="hidden" id="hideCardNo" />
+        <input type="hidden" id="hideCardTradeNo" />
+        <input type="hidden" id="hideMoney" />
+    }
+    @if (Model.IsShowQueryDbButton)
+    {
+        <a id="btnReadCard" href="javascript:void(0);" data-options="iconCls:'icon-search',width:80,onClick:ReadDBCardFunc" class="easyui-linkbutton" style="">读数据库</a>
+    }
+    @if (Model.IsEditAccountInfoPanel)
+    {
+        <a id="btnReadIDCard" href="javascript:void(0);" data-options="iconCls:'icon-search',width:80,onClick:ReadIDCard" class="easyui-linkbutton" style="">读二代证</a>
+        <input type="hidden" id="hideIsReadIDCard" value="0" />
+    }
+</div>
+<hr style="clear:both;" />
+<div class="easyui-panel" title="卡信息" style="width:99%;height:130px;" data-options="collapsible:true,border:true">
+    <div class="table">
+        <ul>
+            <li><span style="margin-right:24px">卡号：</span><input class="easyui-textbox" type="text" name="CardNo" id="CardNo" data-options="editable:@testModel" /></li>
+            <li>卡片类型：<input class="easyui-textbox" type="text" name="Cardtype" id="Cardtype" disabled="false" /></li>
+            <li>卡片状态：<input class="easyui-textbox" type="text" name="ResourceStateName" id="ResourceStateName" disabled="false" /></li>
+            <li>启用日期：<input class="easyui-textbox" type="text" name="SDate" id="SDate" disabled="false" /></li>
+            <li>结束日期：<input class="easyui-textbox" type="text" name="EDate" id="EDate" disabled="false" /></li>
+            <li>卡内余额：<input class="easyui-textbox" type="text" name="Money" id="Money" disabled="false" /></li>
+            @if (Model.ShowSaleCardDateTime)
+            {
+                <li>售卡员工：<input class="easyui-textbox" type="text" name="SaleStaffNo" id="SaleStaffNo" disabled="false" /></li>
+                <li>售卡时间：<input class="easyui-textbox" type="text" name="SaleDate" id="SaleDate" disabled="false" /></li>
+            }
+            <li>银行卡号：<input class="easyui-textbox" type="text" name="BankCardNo" id="BankCardNo" disabled="false" /></li>
+            @if (Model.IsShowReportlossDate)
+            {
+                <li>挂失时间：<input class="easyui-textbox" type="text" name="LossDate" id="LossDate" disabled="false" /></li>
+            }
+            @if (Model.IsShowOpenFunc)
+            {
+                <li>
+                    <div id="OpenedFuncList" style="padding:5px;"> 
+                    </div></li>
+            }
+
+        </ul> 
+    </div>
+</div> 

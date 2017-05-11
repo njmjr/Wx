@@ -1,0 +1,275 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string toolbarItem = ViewBag.ToolbarItem ?? "search,export,print";
+}
+@section header{
+    <style type="text/css">
+        html {
+            font-family: sans-serif;
+        }
+
+        .datagrid-header-inner {
+            font-weight: bold;
+        }
+    </style>
+}
+@section footer{
+    <script src="/Scripts/plugins/datagrid-filter.js" type="text/javascript"></script>
+    <script src="/Scripts/plugins/datagrid-detailview.js" type="text/javascript"></script>
+    <script src="/Scripts/plugins/datagrid-scrollview.js" type="text/javascript"></script>
+    <script src="~/Scripts/reporthelper.js"></script>
+    <script type="text/javascript">
+        var rownumbers = true, singleSelect = true, ctrlSelect = false, multiSort = false, pageSize = 25,enableSelectRow = false;
+        var grid, frozenColumns = [[]], columns = [[]], filterData = [], enableFilterData = false, editIndex = undefined, columnMenu = undefined, selectOnCheck = true,checkOnSelect=true;
+
+        var startfunction = function () {
+        };
+        var endfunction = function () {
+        };
+        var selectRow = function () {
+        };
+        var replaceSearchField = function (field) {
+            return field;
+        };
+        var customerSearchFunc = function(){
+        };
+        var customerPrintFunc = function () {
+        };
+        var gridLoadSuccess = function(){
+	
+        };
+    </script>
+    @RenderSection("paramInit", false)
+    <script type="text/javascript">
+        var openSearchDialog = function () {
+            $('#searchDialog').window('open');
+        };
+
+        var exportReport = function () {
+            $.wx.easyui.info.clear();
+            $.messager.progress({ title: '正在处理中', msg: '正在处理中...' });
+            var rows = $("#grid-@ViewBag.GridId").datagrid("getRows");
+            if (rows.length == 0) {
+                var errors = '没有导出的内容';
+                $.wx.easyui.msg.error(errors, '错误');
+                return;
+            }
+            
+            var query = $.wx.filter.queryParamByFormId('searchForm');
+
+            query.Columns = JSON.stringify($("#grid-@ViewBag.GridId").datagrid("options").columns[0]);
+            $.ajax({
+                type: "POST",
+                url: "@ViewBag.ExportDataUrl",
+                data: query,
+                success: function (filePath) {
+                    var downUrl = '/Report/DownloadFile?file=' + filePath;
+                    window.location = downUrl;
+                    setTimeout(function () { $.messager.progress('close'); }, 1000);
+                },
+                error: function (data) {
+                    var obj = JSON.parse(data.responseText);
+                    if (obj.ResponseStatus.ErrorCode != undefined && obj.ResponseStatus.ErrorCode != "OK") {
+                        var errors = '';
+                        $.each(obj.ResponseStatus.Errors, function (i, o) {
+                            errors = errors + "<li>" + (o.ErrorCode != null ? o.ErrorCode + ':' : '') + o.Message + "</li>";
+                        });
+                        $.wx.easyui.msg.error(errors, '错误');
+                    };
+                }
+            });
+        };
+
+        var printReport = function () {
+            CreateFormPage("@ViewBag.Title", $("#grid-@ViewBag.GridId"));
+        };
+
+        var searchData = function () {
+            $.wx.easyui.info.clear();
+            $.messager.progress({ title: '正在处理中', msg: '正在处理中...' });
+            var query = $.wx.filter.queryParamByFormId('searchForm');
+            //console.log(query);
+            if(query){
+                $("#grid-@ViewBag.GridId").datagrid({ url: "@ViewBag.GridDataUrl", queryParams: query });
+                customerSearchFunc(query);
+            }
+        }
+
+        var customerSearchFunc = function(query){
+            $("#grid-@ViewBag.GridId").datagrid("getPanel").panel("setTitle", "@ViewBag.Title" + '(' + query.BeginDate + '  -  ' + query.EndDate + ')');
+        };
+         
+        var customerPrintFunc = function () {
+            var query = $.wx.filter.queryParamByFormId('searchForm');
+            return "<p class='time'>开始日期：" + query.BeginDate + " 结束日期：" + query.EndDate + "</p>";
+        };
+
+        function ajaxResultHandler(data) {
+            if (data.Type == "Success") {
+                grid.datagrid("reload");
+            }
+            if (data.Type == "Error") {
+                $.wx.easyui.msg.error(data.Content);
+            } else {
+                $.wx.easyui.msg.tip(data.Content);
+            }
+        }
+
+        var toolbarData = [
+           @if (toolbarItem.Contains("search"))
+        {
+            @:{ text: "搜索", iconCls: "icon-search", handler: openSearchDialog }, '-',
+                    }
+            @if (toolbarItem.Contains("export"))
+        {
+            @:{ text: "导出", iconCls: "icon-export", handler: exportReport }, '-',
+                    }
+             @if (toolbarItem.Contains("print"))
+        {
+            @:{ text: "打印", iconCls: "icon-print", handler: printReport }, '-',
+                }
+            'test'
+        ];
+    </script>
+    @RenderSection("customScript", true)
+    <script type="text/javascript">
+    $(function () {
+        startfunction();
+
+        grid = $("#grid-@ViewBag.GridId").datagrid({
+            title: "@ViewBag.Title",
+            fit: true,
+            frozenColumns: frozenColumns,
+            columns: columns,
+            fitColumns: true,
+            url: '',
+            loadMsg: "正在加载数据，请稍候",
+            toolbar: toolbarData,
+            rownumbers: rownumbers,
+            singleSelect: singleSelect,
+            selectOnCheck: selectOnCheck,
+            checkOnSelect: checkOnSelect,
+            ctrlSelect: ctrlSelect,
+            multiSort: multiSort,
+            pagination: "@ViewBag.IsPaging",
+            pageSize: pageSize,
+            pageList: [10, 25, 50, 100, 200],
+            remoteFilter: true,
+            onBeforeLoad: beforeLoad,
+            loadFilter: loadFilter,
+            onLoadError: loadError,
+            showFooter: true,
+            onLoadSuccess: gridLoadSuccess
+        });
+        if (enableSelectRow) {
+            grid.datagrid({ onClickRow: selectRow });
+        }
+        if (enableFilterData) {
+            grid.datagrid("enableFilter", filterData);
+        }
+        $('#DIV_toolbar').appendTo('.datagrid-toolbar');
+        endfunction();
+    });
+
+    //param的部分属性与后台要求不符，重置属性并删除原有属性
+    function beforeLoad(param) {
+        if (param.page) {
+            param.pageIndex = param.page;
+            delete param.page;
+        }
+        if (param.rows) {
+            param.pageSize = param.rows;
+            delete param.rows;
+        }
+        if (param.sort) {
+            var array = param.sort.split(',');
+            for (var i = 0; i < array.length; i++) {
+                var field = array[i];
+                array[i] = replaceSearchField(field);
+            }
+            param.sort = $.wx.tools.array.expandAndToString(array, ",");
+            param.sortField = param.sort;
+            delete param.sort;
+        }
+        if (param.order) {
+            param.sortOrder = param.order;
+            delete param.order;
+        }
+    }
+
+    function loadFilter(data) {
+        if (data.ResponseStatus != undefined && data.ResponseStatus.ErrorCode && data.ResponseStatus.ErrorCode != "OK") {
+            var errors = '';
+            $.each(data.ResponseStatus.Errors, function (i, o) {
+                errors = errors + "<li>" + (o.ErrorCode != null ? o.ErrorCode + ':' : '') + o.Message + "</li>";
+            });
+            $.wx.easyui.msg.error(errors, '错误');
+            data.rows = [];
+            data.footers = [];
+            data.total = 0;
+            return data;
+        }
+        if (data.Reports != undefined && data.Reports != undefined) {
+            $('#searchDialog').window('close');
+            data = data.Reports;
+        }
+        if (data.Rows != undefined && data.Total != undefined) {
+            data.rows = data.Rows;
+            data.total = data.Total;
+            delete data.Rows;
+            delete data.Total;
+        }
+        if (data.Footer != undefined) {
+            data.footer = data.Footer;
+            delete data.Footers;
+        }
+        setTimeout(function () { $.messager.progress('close'); }, 1000);
+        return data;
+    }
+
+    function pagerFilter(data) {
+        data = loadFilter(data);
+        var dg = $(this);
+        var opts = dg.datagrid('options');
+        var pager = dg.datagrid('getPager');
+        pager.pagination({
+            onSelectPage: function (pageNum, pageSize) {
+                opts.pageNumber = pageNum;
+                opts.pageSize = pageSize;
+                pager.pagination('refresh', {
+                    pageNumber: pageNum,
+                    pageSize: pageSize
+                });
+                dg.datagrid('loadData', data);
+            }
+        });
+        if (!data.originalRows) {
+            data.originalRows = (data.rows);
+        }
+        var start = (opts.pageNumber - 1) * parseInt(opts.pageSize);
+        var end = start + parseInt(opts.pageSize);
+        data.rows = (data.originalRows.slice(start, end));
+        return data;
+    }
+
+    function loadError() {
+        $.wx.easyui.msg.error("远程数据载入失败，请重试或检查参数。");
+    }
+
+    </script>
+    @RenderSection("endScript", false)
+}
+
+@RenderSection("headHtml", false)
+<div id="searchDialog" class="easyui-dialog" title="搜索" style="width:650px;height:300px;"
+     data-options="resizable:false,modal:true,buttons:[{
+				text:'查询',
+				handler: searchData
+			}]">
+
+    <form id="searchForm" method="post">
+        @RenderSection("searchHmtl", false)
+    </form>
+</div>
+<div id="grid-@ViewBag.GridId"></div>
+@RenderSection("footHtml", false)

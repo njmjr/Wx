@@ -1,0 +1,133 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string city = System.Configuration.ConfigurationManager.AppSettings["City"];
+    string printJs = "/Scripts/" + city + "print.js";
+    
+}
+
+<div class="infos">
+    <ul id="infos"></ul>
+    <input type="hidden" value="@Session["DeptName"]" id="hidDepartName" />
+    <input type="hidden" value="@Session["StaffNo"]" id="hidStaff" />
+    <input type="hidden" value="@Session["StaffName"]" id="hidStaffName" />
+    <input type="hidden" value="@Session["OperateCard"]" id="hidOperateCard" />
+    <input type="hidden" id="hidIsNew" />
+    <input type="hidden" id="hidIsReadDB" />
+</div>
+@RenderBody()
+
+@section footer{
+    <script src="~/Scripts/Wx.cardreaderImpl.js"></script>
+    <script src="~/Scripts/cardreaderhelper.js"></script>
+    <script src="~/Scripts/common.js"></script>
+    <script src="~/Scripts/reporthelper.js"></script>
+    <script src="@printJs"></script>
+    <script type="text/javascript">
+        var BeginReadCardFunc = function () { }, ReadCardFunc = function () { },
+            EndReadCardFunc = function () { }, BindCostList = function () { },
+            ChangeCostList = function () { }, BeginSubmitFunc = function () { },
+            SubmitFunc = function () { }, EndSubmitFunc = function () { },
+            WriteCardSuccFunc = function () { },
+            BindCustomerInfo = function () { }, SearchCustomerInfo = function () { }, BindPrintInfo = function () { };
+        var readCardRequest = {}, readCardResponse = {}, submitRequest = {}, submitResponse = {}, costList = {}, printInfo = {};
+        var cardno;
+        var city;
+        city = '@Html.Raw(city)';
+        function BindForm(obj) {
+            for (var p in obj) {
+                if (typeof (obj[p]) != "undefined" && typeof (obj[p]) != "object") {
+                    if ($('#hidIsNew').val() == 'false') {
+                        if (typeof (obj[p]) == "number") {
+                            $('#O' + p).textbox('setValue', (parseFloat(obj[p]) / 100).toFixed(2));
+                        }
+                        else {
+                            $('#O' + p).textbox('setValue', obj[p]);
+                        }
+                    }
+                    else {
+                        if (typeof (obj[p]) == "number") {
+                            $('#' + p).textbox('setValue', (parseFloat(obj[p])/100).toFixed(2));
+                        }
+                        else {
+                            $('#' + p).textbox('setValue', obj[p]);
+                        }
+                    }
+                }
+                else if ($.isArray(obj[p]) && p.toString() === 'OpenedFuncList') {
+                    if (obj[p].length > 0)
+                    {
+                        $('#' + p).html('开通功能：' + obj[p].toString());
+                    }
+                    else {
+                        $('#' + p).html('');
+                    }
+                    
+                }
+            }
+        }
+        ChangeCostList = function (feeTypeCode, fee) {
+            if (feeTypeCode) {
+                var oldfee = 0;
+                for (var p in costList) {
+                    if (costList[p]['FEETYPECODE'] == feeTypeCode) {
+                        oldfee = costList[p]['BASEFEE'];
+                        costList[p]['BASEFEE'] = fee;
+                    }
+                    if (costList[p]['FEETYPECODE'] == 'TT') {
+                        costList[p]['BASEFEE'] = costList[p]['BASEFEE'] - oldfee + fee;
+                    }
+                }
+            }
+
+            //for (var p in readCardResponse) {
+            //    if (readCardResponse.hasOwnProperty(p) && costList.hasOwnProperty(p)) costList[p] = readCardResponse[p];
+            //}
+            BindCostList();
+        }
+
+        function BindRequest(cardInfo) {
+            if (readCardRequest) {
+                if ($('#hidIsNew').val() == 'true') {
+                    readCardRequest.CardNo = cardInfo.cardNo;
+                    readCardRequest.OldCardNo = $('#OOldCardNo').val();
+                }
+                else if ($('#hidIsNew').val() == 'false') {
+                    readCardRequest.OldCardNo = cardInfo.cardNo;
+                }
+                else {
+                    readCardRequest.CardNo = cardInfo.cardNo;
+                }
+                readCardRequest.ASN = cardInfo.appSn;
+                readCardRequest.CardType = cardInfo.cardType;
+                readCardRequest.SDate = cardInfo.appStartDate;
+                readCardRequest.EDate = cardInfo.appEndDate;
+                readCardRequest.Money = cardInfo.balance;               
+                if ($('#ReasonCode').length > 0) {
+                    readCardRequest.ReasonCode = $('#ReasonCode').combobox('getValue');
+                }
+                $('#hideMoney').val(cardInfo.balance);
+                $('#hideCardTradeNo').val(cardInfo.tradeNo);
+            }
+        }
+
+        function GetFee(feeTypeCode) {
+            var query = $.Enumerable.From(costList)
+                .Where(function (x) { return x.FEETYPECODE == feeTypeCode; })
+                .ToArray();
+            if (query && query.length !=0) {
+                return query[0].BASEFEE;
+            }
+            return null;
+
+        }
+
+        
+    </script>
+    @RenderSection("customScript", true)
+    <script type="text/javascript">
+        $(function () {
+            BindCostList();
+        });
+    </script>
+    @RenderSection("endScript", false)
+} 

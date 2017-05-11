@@ -1,0 +1,260 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CardTest</title>
+    <link href="~/Content/themes/metro/easyui.css" rel="stylesheet" />
+    <link href="~/Content/themes/icon.css" rel="stylesheet" />
+    <link href="~/Content/onecard-icons.css" rel="stylesheet" />
+    <link href="~/Content/wx.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-1.11.1.min.js"></script>
+    <script src="~/Scripts/jquery.easyui-1.4.1.js" type="text/javascript"></script>
+    <script src="~/Scripts/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+    <script src="~/Scripts/wx.easyui.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var CardNo = '';
+        var isReadCard = false;
+        function doReadCardNo() {
+            var i;
+            var ErrorInfo;
+            i = CardCtrl.ReadCardNo();
+            if (i != 0) {
+                $.wx.easyui.msg.warning("获取卡片信息失败:" + CardCtrl.ErrInfo + "返回值：" + i, '');
+                return -1;
+            }
+            this.CardNo = CardCtrl.CardNo;
+            $('#CardNo').html(this.CardNo);
+        }
+
+        function doReadInfo() {
+            var ErrorInfo;
+            var i = CardCtrl.ReadInfo(this.OperCardNo);
+            if (i != 0) {
+                $.wx.easyui.msg.warning("获取卡片信息失败:" + CardCtrl.ErrInfo + "返回值：" + i, '');
+                return -1;
+            }
+            var mycardno2, myapptype, myappversion, mysn, mystartdate, myenddate, myfci, mycardtype, mytradeno, mybalance, ypflag;
+            mycardno2 = CardCtrl.CARDNO;
+            //alert(mycardno2);
+            myapptype = CardCtrl.AppType;
+            myappversion = CardCtrl.AppVersion;
+            mysn = CardCtrl.AppSn;
+            mystartdate = CardCtrl.AppStartDate;
+            myenddate = CardCtrl.AppEndDate;
+            myfci = CardCtrl.FCI;
+
+            mycardtype = CardCtrl.CardType;
+
+            mytradeno = CardCtrl.Tradeno;
+
+            mybalance = parseFloat(CardCtrl.Balance) / 100;
+
+            ypflag = CardCtrl.YPFlag;
+            this.isReadCard = true;
+            $('#CardInfo').html("卡号:" + mycardno2 + " 应用类型:" + myapptype + " 应用版本:" + myappversion + " 卡序列号:" + mysn +
+                   " 启用日期:" + mystartdate + " 有效期:" + myenddate + " 卡类型:" + mycardtype + " 卡片交易列号:" + mytradeno +
+                   " 卡内余额:" + mybalance + " 内部员工标识:" + CardCtrl.StaffTag + " 启用标志:" + CardCtrl.InitFlag +
+                   " 月票类型：" + ypflag + " 押金:" + CardCtrl.CardDeposit);
+        }
+
+
+        function SetToken() {
+            var ocardno = this.OperCardNo;
+            $.post('../Home/GetToken', { 'cardno': ocardno }, function (result) {
+                if (result) {
+                    CardCtrl.Token = result;
+                   
+                }
+                else {
+                    $.wx.easyui.msg.warning('获取令牌错误', '');
+                }
+            });
+            
+          
+        }
+
+        function checkReadCard() {
+            if (isReadCard) {
+                this.isReadCard = false;
+                return true;
+            }
+            else {
+                $.wx.easyui.msg.warning('请先读卡信息', '');
+                return false;
+            }
+        }
+
+        function doLock() {
+            if (!checkReadCard()) {
+                return;
+            }
+            var i;
+            var ErrorInfo;
+            SetToken(); i = CardCtrl.Lock(this.OperCardNo, this.CardNo);
+            if (i != 0) {
+                $.wx.easyui.msg.warning("锁卡（修改口令）失败:" + CardCtrl.ErrInfo + "返回值：" + i, '');
+                return -1;
+            }
+            $.wx.easyui.msg.info("锁卡成功!", '');
+        }
+
+        function doUnlock() { 
+            var i;
+            var ErrorInfo;
+            SetToken();
+            i = CardCtrl.UnLock(this.OperCardNo, this.CardNo);
+            if (i != 0) {
+                $.wx.easyui.msg.warning("解锁失败:" + CardCtrl.ErrInfo + "返回值：" + i, '');
+                return -1;
+            }
+            $.wx.easyui.msg.info("解锁成功!", '');
+        }
+
+        function doLoad() {
+            if (!checkReadCard()) {
+                return;
+            }
+            var i;
+            var ErrorInfo; 
+            $('#MyToken').html(CardCtrl.Token);
+            $('#LoadInfo').html("OperCardNo = " + this.OperCardNo + "CardNo = " + this.CardNo + "Balance = " + CardCtrl.Balance);
+            i = CardCtrl.Load(this.OperCardNo, this.CardNo, CardCtrl.Balance, 1, "112233445566");
+            if (i != 0) {
+                $.wx.easyui.msg.warning("圈存失败:" + CardCtrl.ErrInfo + "返回值：" + i, '');
+                return -1;
+            }
+        }
+
+        function doUnload() {
+            //alert("进入测试程序:");
+            if (!checkReadCard()) {
+                return;
+            }
+            var i;
+            var ErrorInfo;
+            SetToken();
+            i = CardCtrl.UnLoad(this.OperCardNo, this.CardNo, CardCtrl.Balance, CardCtrl.Balance, "112233445566");
+            if (i != 0) {
+                $.wx.easyui.msg.warning("圈提失败:" + CardCtrl.ErrInfo + "返回值：" + i, '');
+                return -1;
+            }
+            $.wx.easyui.msg.info("圈提成功!", '');
+        }
+
+        function doRead8() {
+            if (!checkReadCard()) {
+                return;
+            }
+            var i;
+            var ErrorInfo;
+            i = CardCtrl.ReadRecord(this.OperCardNo);
+            if (i != 0) {
+                $.wx.easyui.msg.warning("读取交易记录失败:" + CardCtrl.ErrInfo + "返回值：" + i, '');
+                return -1;
+            }
+
+            var objTradenoRec = new Array();
+            var objTradeMoneyRec = new Array();
+            var objTradeTypeRec = new Array();
+            var objTradeTermRec = new Array();
+            var objTradeDateRec = new Array();
+            var objTradeTimeRec = new Array();
+
+            splitString(objTradenoRec, CardCtrl.TradenoRec, 4, CardCtrl.TradenoRec.length);
+            splitString(objTradeMoneyRec, CardCtrl.TradeMoneyRec, 8, CardCtrl.TradeMoneyRec.length);
+            splitString(objTradeTypeRec, CardCtrl.TradeTypeRec, 2, CardCtrl.TradeTypeRec.length);
+            splitString(objTradeTermRec, CardCtrl.TradeTermRec, 12, CardCtrl.TradeTermRec.length);
+            splitString(objTradeDateRec, CardCtrl.TradeDateRec, 8, CardCtrl.TradeDateRec.length);
+            splitString(objTradeTimeRec, CardCtrl.TradeTimeRec, 6, CardCtrl.TradeTimeRec.length);
+
+            var str = "";
+            for (var i = 0; i < objTradenoRec.length; i++) {
+                str += "联机交易序号:" + objTradenoRec[i] + " 交易金额:" + objTradeMoneyRec[i] +
+                 " 交易类型:" + objTradeTypeRec[i] + " 交易终端:" + objTradeTermRec[i] +
+                  " 交易日期:" + objTradeDateRec[i] + " 交易时间:" + objTradeTimeRec[i] + "<br/>";
+            }
+            $('#TradeInfo').html(str);
+        }
+
+        function doOperRead() {
+            //alert("进入测试程序:");
+            var i;
+            var ErrorInfo;
+            i = CardCtrl.ReadOperCardNo();
+            if (i != 0) {
+                $.wx.easyui.msg.warning("获取卡片信息失败:" + CardCtrl.ErrInfo + "返回值：" + i, '');
+                return -1;
+            }
+            var mycardno;
+
+            mycardno = CardCtrl.OperCardNo;
+            OperCardNo = CardCtrl.OperCardNo;
+            $('#OperCardNo').html(mycardno);
+
+        }
+        function ReadHolder() {
+            //alert("进入测试程序:");
+            var i;
+            i = CardCtrl.ReadCardHolder(this.OperCardNo);
+            if (i != 0) {
+                $.wx.easyui.msg.warning("获取卡片信息失败:" + CardCtrl.ErrInfo + "返回值：" + i, '');
+                return -1;
+            }
+            var mycardno;
+
+            var name = CardCtrl.CardHolderName;
+            var paperno = CardCtrl.CardHolderPaperno;
+            $('#CustName').html(name);
+            $('#CustomerNo').html(paperno);
+
+
+        }
+
+        var OperCardNo = '';
+
+        function splitString(obj, str, childLen, len) {
+            var pos = 0;
+            while (pos < len) {
+                obj.push(str.substr(pos, childLen));
+                pos += childLen;
+            }
+        }
+
+    </script>
+</head>
+<body>
+    <div>
+        <object id="CardCtrl" classid="clsid:0362744E-0794-4020-B5B0-355ED58A736D" width="0" height="0"></object>
+        
+        <div class="easyui-panel" style="padding:5px;">
+            <a href="#" class="easyui-linkbutton" onclick="javascript: doOperRead()">读操作员卡</a>
+            <a href="#" class="easyui-linkbutton" onclick="javascript: doReadCardNo()" >读取卡号</a>
+            <a href="#" class="easyui-linkbutton" onclick="javascript: doReadInfo()" >读取卡信息</a>
+            <a href="#" class="easyui-linkbutton" onclick="javascript: SetToken()" >获取令牌</a>
+            <a href="#" class="easyui-linkbutton" onclick="javascript: doLock()" >锁卡</a>
+            <a href="#" class="easyui-linkbutton" onclick="javascript: doUnlock()" >解锁</a>
+            <a href="#" class="easyui-linkbutton" onclick="javascript: doRead8()" >读交易记录</a>
+            <a href="#" class="easyui-linkbutton" onclick="javascript: ReadHolder()">读政府应用Read</a>
+        </div>
+        <div id="p" class="easyui-panel" title="卡信息" style="height:200px;padding:10px;">
+            <ul>
+                <li>操作员卡号：<span id="OperCardNo"></span></li>
+                <li>电子钱包卡号：<span id="CardNo"></span></li>
+                <li>电子钱包卡信息：<span id="CardInfo"></span></li>
+                <li>卡交易信息：<span id="TradeInfo"></span></li>
+                <li>令牌：<span id="MyToken"></span></li>
+                <li>圈存：<span id="LoadInfo"></span></li>
+                <li>姓名：<span id="CustName"></span></li>
+                <li>身份证：<span id="CustomerNo"></span></li>
+            </ul>
+        </div>
+
+
+        </div>
+</body>
+</html>
