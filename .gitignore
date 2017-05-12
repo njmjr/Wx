@@ -18,3 +18,4 @@ tmp/
 *.v12.suo
 *.user
 packages/
+*.pubxml

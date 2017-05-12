@@ -84,6 +84,7 @@
     <Compile Include="Data\SingletonList.cs" />
     <Compile Include="Data\SortCondition.cs" />
     <Compile Include="Data\TokenHelper.cs" />
+    <Compile Include="Data\XmlAndJsonToHash.cs" />
     <Compile Include="Exceptions\ExceptionMessage.cs" />
     <Compile Include="Exceptions\WxException.cs" />
     <Compile Include="Data\ExportHelper.cs" />

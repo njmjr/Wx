@@ -1,15 +1,7 @@
 ﻿@{
     ViewBag.Title = "Welcome";
     Layout = null;
-    var city = System.Configuration.ConfigurationManager.AppSettings["City"];
-    var ocxVersion =  System.Configuration.ConfigurationManager.AppSettings["OcxVersion"];
-    var ClsId = System.Configuration.ConfigurationManager.AppSettings["ClsId"];
-    string ocxURI =  string.Empty;
-    if(!string.IsNullOrEmpty(ocxVersion))
-    {
-        ocxURI = string.Format("codebase='../Tools/Ocx{0}.cab#version={1}'",
-       city.ToUpper(), ocxVersion);
-    }
+
 }
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -22,13 +14,8 @@
 </head>
 
 <body style="background-color:#f2f2f2;">
-    <object id="CardCtrl" classid="clsid:@ClsId" width="0" height="0" @Html.Raw(ocxURI)=Html.Raw(ocxURI)></object>
     <script src="~/Scripts/wx.cardreaderImpl.js"></script>
     <script type="text/javascript">
-        var cardReader = $.wx.ocx.CardReader;
-        cardReader.testingMode = "@Session["type"]" == "test";
-        cardReader.OperateCardNo = "@Session["OperateCard"]";
-        cardReader.city = '@city';
     </script>
     <div class="mainindex">
         <div class="welinfo">

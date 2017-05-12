@@ -156,27 +156,18 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Constants\Constants.cs" />
+    <Compile Include="Common\WxHelper.cs" />
+    <Compile Include="Common\Constants.cs" />
+    <Compile Include="Controllers\WxController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PrivilegePRController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="ServiceModel\WeChatRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceModel\BadCardSync.cs" />
-    <Compile Include="ServiceModel\ChangeCardForBank.cs" />
-    <Compile Include="ServiceModel\GetBankPic.cs" />
-    <Compile Include="ServiceModel\MakeUpCard.cs" />
-    <Compile Include="ServiceModel\PersonIdentity.cs" />
-    <Compile Include="ServiceModel\PrintPicture.cs" />
-    <Compile Include="ServiceModel\OnecardServiceRespnose.cs" />
-    <Compile Include="ServiceModel\UnLockCard.cs" />
-    <Compile Include="ServiceModel\ChangeCard.cs" />
-    <Compile Include="ServiceModel\DestroyCard.cs" />
-    <Compile Include="ServiceModel\ReportLoss.cs" />
-    <Compile Include="ServiceModel\ReturnCard.cs" />
-    <Compile Include="ServiceModel\SaleCard.cs" />
-    <Compile Include="ServiceModel\TransitBalance.cs" />
+    <Compile Include="ServiceModel\BaseMessage.cs" />
+    <Compile Include="ServiceModel\TextMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\images\404.png" />
@@ -422,8 +413,8 @@
     <Content Include="Scripts\jquery-1.11.1.min.map" />
     <Content Include="Scripts\easyloader.js" />
     <Content Include="Content\images\Thumbs.db" />
-    <Content Include="Content\tree_data.json" />
     <None Include="Properties\PublishProfiles\onecard_v3.pubxml" />
+    <None Include="Properties\PublishProfiles\Wx.pubxml" />
     <None Include="Scripts\jquery-1.11.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.1.js" />
     <Content Include="Scripts\jquery-1.11.1.min.js" />
@@ -457,13 +448,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\Welcome.cshtml" />
-    <Content Include="Views\Shared\CardBusiness\_CardInfoPanel.cshtml" />
     <Content Include="Views\Shared\_CardBusinessLayout.cshtml" />
-    <Content Include="Views\Shared\CardBusiness\_CardInfoPanelScript.cshtml" />
-    <Content Include="Views\Shared\CardBusiness\_AccountInfoPanel.cshtml" />
-    <Content Include="Views\Shared\CardBusiness\_AccountInfoPanelScript.cshtml" />
-    <Content Include="Views\Shared\CardBusiness\_BusinessPanel.cshtml" />
-    <Content Include="Views\Shared\CardBusiness\_BusinessPanelScript.cshtml" />
     <Content Include="Views\Shared\_ReportLayout.cshtml" />
     <Content Include="Views\Home\CardTest.cshtml" />
     <Content Include="Views\Shared\_CURDLayout.cshtml" />
@@ -472,15 +457,11 @@
     <Content Include="Views\PrivilegePR\PrRoleConfig.cshtml" />
     <Content Include="Views\PrivilegePR\PrStaffRoleConfig.cshtml" />
     <Content Include="Views\PrivilegePR\PrRolePriConfig.cshtml" />
-    <Content Include="Scripts\tree_data.json" />
-    <Content Include="Views\PrivilegePR\tree_data.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\tmp\" />
     <Folder Include="Files\" />
-    <Folder Include="Model\" />
-    <Folder Include="OCX\" />
     <Folder Include="Tools\" />
   </ItemGroup>
   <ItemGroup>

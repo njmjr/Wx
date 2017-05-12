@@ -135,7 +135,6 @@
   <ItemGroup>
     <Compile Include="Common\CommonHelper.cs" />
     <Compile Include="Controllers\BaseController.cs" />
-    <Compile Include="Controllers\CardBaseController.cs" />
     <Compile Include="Common\WeChatHelper.cs" />
     <Compile Include="Mvc\Binders\JsonBinder.cs" />
     <Compile Include="Mvc\Binders\StringTrimModelBinder.cs" />

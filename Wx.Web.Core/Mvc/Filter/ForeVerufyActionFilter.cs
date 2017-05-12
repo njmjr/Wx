@@ -6,8 +6,6 @@ namespace Wx.Web.Core.Mvc.Filter
 {
     /// <summary>
     /// 权限认证
-    /// dongx
-    /// 20151009
     /// </summary>
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false, Inherited = true)]

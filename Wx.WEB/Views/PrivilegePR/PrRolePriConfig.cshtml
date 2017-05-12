@@ -28,34 +28,10 @@
 
 @section footer{
     <script type="text/javascript">
-        var rownumbers = true,
-            singleSelect = false,
-            checkbox = true,
-            multiSort = false,
-            pageSize = 25,
-            tradeType = null,
-            fitColumns = true,
-            frozenColumns = [[]],
-            columns = [[]],
-            filterData = [],
-            enableFilterData = false,
-            editIndex = undefined,
-            selectOnCheck = true,
-            checkOnSelect = true,
-            columnMenu = undefined,
-            submitURL = null,
-            submitModel = {},
-            submitRequest = {},
-            printInfo = {};
-
-        var endfunction = function() {};
-        var searchCustomerFunc = function() {};
         var replaceSearchField = function(field) {
             return field;
         };
-        var bindSubmitRequest = function(query) {};
 
-        var permmitfunction = function() {};
         customloadSuccess = function(data) {
             if (data.rows.length > 0) {
                 for (var i = 0; i < data.rows.length; i++) {
@@ -66,9 +42,6 @@
                 }
             }
         }
-        var clickRow = function(rowIndex, rowData) {
-
-        };
 
         columns = [
             [
@@ -81,17 +54,15 @@
         ];
 
         $(function() {
+
             $("#tree-@Model.GridId").tree({
                 url: "@Model.TreeUrl",
                 checkbox: true,
                 loadFilter: treeLoadFilter,
-                height: "@Model.GridHeight",
-                onClick: function(node) {
-                    alert(node.id + node.pid);
-                }
+                height: "@Model.GridHeight"
             });
 
-            var grid = $("#grid-@Model.GridId").datagrid({
+            $("#grid-@Model.GridId").datagrid({
                 title: "@Model.Title",
                 fit: @Model.FitGrid,
                 height: "@Model.GridHeight",
@@ -102,26 +73,20 @@
                 url: "@(Model.AutoSearch ? @Model.GridDataUrl : "")",
                 loadMsg: "正在加载数据，请稍候",
                 rownumbers: true,
-                singleSelect: singleSelect,
-                selectOnCheck: selectOnCheck,
-                checkOnSelect: checkOnSelect,
-                multiSort: multiSort,
+                singleSelect: false,
+                selectOnCheck: true,
+                checkOnSelect: true,
+                multiSort: false,
                 pagination: "@Model.IsPaging",
-                pageSize: pageSize,
                 pageList: [10, 25, 50, 100, 200],
                 remoteFilter: true,
                 onBeforeLoad: beforeLoad,
                 loadFilter: loadFilter,
                 onLoadError: loadError,
                 showFooter: false,
-                onClickRow: selectRow,
                 onLoadSuccess: loadSuccess
             });
         });
-
-        function treeLoader(param, success, error) {
-
-        }
 
         function treeLoadFilter(data) {
             if (data.ResponseStatus.ErrorCode != undefined && data.ResponseStatus.ErrorCode != "OK") {
@@ -137,10 +102,6 @@
             }
             setTimeout(function() { $.messager.progress('close'); }, 1000);
             return data;
-        }
-
-        function onTreeBeforeLoad(node, param) {
-
         }
 
         SetPrivilege = function() {
@@ -194,7 +155,7 @@
                         }
                     }
                 },
-                error: function(xmlHttpRequest, textStatus, errorThrown) {
+                error: function(xmlHttpRequest) {
                     var result = JSON.parse(xmlHttpRequest.responseText);
                     if (result.ResponseStatus.ErrorCode === 'OK') {
                         $.wx.easyui.info.success('权限设置成功');
@@ -336,11 +297,6 @@
         function loadSuccess(data) {
             customloadSuccess(data);
         }
-
-        function selectRow(rowIndex, rowData) {
-            clickRow(rowIndex, rowData);
-        }
-
         function loadError() {
             $.wx.easyui.msg.error("远程数据载入失败，请重试或检查参数。");
         }
