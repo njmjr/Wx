@@ -10,6 +10,8 @@ Wx.Utility/bin/
 Wx.Task/bin/ 
 Wx.Task/bin/
 Wx.WEB/log/
+WeChat.Dtos/bin/
+WeChat.Dtos/obj/
 *.orig
 .vs/
 tmp/
