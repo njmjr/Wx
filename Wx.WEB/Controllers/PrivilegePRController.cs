@@ -451,7 +451,7 @@ namespace Wx.WEB.Controllers
                 RoleNo = roleId
             };
             string response = WeChatHelper.PostService("RolePower", request);
-            return JavaScript(response);
+            return Json(response, JsonRequestBehavior.DenyGet);
         }
 
         [AjaxOnly]
@@ -464,7 +464,7 @@ namespace Wx.WEB.Controllers
                 RoleNo = roleId
             };
             string response = WeChatHelper.PostService("RolePower", request);
-            return JavaScript(response);
+            return Json(response, JsonRequestBehavior.DenyGet);
         }
 
         [AjaxOnly]
@@ -479,7 +479,7 @@ namespace Wx.WEB.Controllers
                 Handles = handles.ToList(),
                 CurrOper = Session["StaffNo"].CastTo(""),
             };
-            RolePowerResponse response = WeChatHelper.PostService<RolePower, RolePowerResponse>("RolePower", request);
+            string response = WeChatHelper.PostService("RolePower", request);
             return Json(response, JsonRequestBehavior.DenyGet);
         }
 

@@ -9,7 +9,7 @@
 <div class="infos">
     <ul id="infos"></ul>
 </div>
-<div class="btnList">
+<div class="btnList" style="margin-right:10px;">
     <span style="font-size:12px">角色名称：</span>
     <select class="easyui-combobox" name="ROLENO" id="ROLENO" data-options="valueField:'ROLENO',textField:'ROLENAME',data:@roles,onSelect:function(rec){changeRole(rec.ROLENO);},editable:false" style="width:120px;"></select>
     <a id="btnSetPri" href="javascript:void(0);" data-options="iconCls:'icon-search',width:80,onClick:SetPrivilege" class="easyui-linkbutton" style="">设置</a>
@@ -89,6 +89,9 @@
         });
 
         function treeLoadFilter(data) {
+            if (!(data instanceof Object)) {
+                data = JSON.parse(data);
+            }
             if (data.ResponseStatus.ErrorCode != undefined && data.ResponseStatus.ErrorCode != "OK") {
                 var errors = '';
                 $.each(data.ResponseStatus.Errors, function(i, o) {
@@ -141,9 +144,10 @@
                 data: JSON.stringify(params),
                 datatype: 'text  json',
                 success: function(result) {
+                    result = JSON.parse(result);
                     if (result) {
                         if (result.ResponseStatus.ErrorCode === 'OK') {
-                            $.wx.easyui.info.success('权限设置成功');
+                            $.wx.easyui.msg.tip("<li class='infos'>权限设置成功</li>", '', 3000);
                             setTimeout(function() { $.messager.progress('close'); }, 1000);
 
                         } else {
@@ -153,20 +157,6 @@
                             });
                             $.wx.easyui.msg.error(errors, '错误');
                         }
-                    }
-                },
-                error: function(xmlHttpRequest) {
-                    var result = JSON.parse(xmlHttpRequest.responseText);
-                    if (result.ResponseStatus.ErrorCode === 'OK') {
-                        $.wx.easyui.info.success('权限设置成功');
-                        setTimeout(function() { $.messager.progress('close'); }, 1000);
-
-                    } else {
-                        var errors = '';
-                        $.each(result.ResponseStatus.Errors, function(i, o) {
-                            errors = errors + "<li>" + (o.ErrorCode != null ? o.ErrorCode + ':' : '') + o.Message + "</li>";
-                        });
-                        $.wx.easyui.msg.error(errors, '错误');
                     }
                 }
             });
@@ -186,19 +176,12 @@
                 success: function(result) {
                     $("#tree-@Model.GridId").tree({
                         url: "",
-                        data: result
-                    });
-                },
-                error: function(xmlHttpRequest, textStatus, errorThrown) {
-                    console.log(xmlHttpRequest.responseText);
-                    var data = JSON.parse(xmlHttpRequest.responseText);
-                    $("#tree-@Model.GridId").tree({
-                        url: "",
-                        data: data
+                        data: JSON.parse(result)
                     });
                     $.messager.progress('close');
-                },
+                }
             });
+
             $.ajax({
                 type: "POST",
                 url: "@Model.GridDataUrl",
@@ -206,12 +189,8 @@
                 data: param,
                 datatype: 'text  json',
                 success: function(result) {
-                    $("#grid-@Model.GridId").datagrid({ url: "", data: result });
-                },
-                error: function(xmlHttpRequest, textStatus, errorThrown) {
-                    var data = JSON.parse(xmlHttpRequest.responseText);
-                    $("#grid-@Model.GridId").datagrid({ url: "", data: data });
-                },
+                    $("#grid-@Model.GridId").datagrid({ url: "", data: JSON.parse(result) });
+                }
             });
 
         }
@@ -243,6 +222,9 @@
         }
 
         function loadFilter(data) {
+            if (!(data instanceof Object)) {
+                data = JSON.parse(data);
+            }
             if (data.ResponseStatus.ErrorCode != undefined && data.ResponseStatus.ErrorCode != "OK") {
                 var errors = '';
                 $.each(data.ResponseStatus.Errors, function(i, o) {

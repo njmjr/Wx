@@ -1,0 +1,40 @@
+﻿@{
+    ViewBag.Title = "CrawlerPan";
+}
+@{
+    Layout = "~/Views/Shared/_ReportLayout.cshtml";
+    ViewBag.Title = "百度网盘";
+    ViewBag.GridId = "CrawlerPan";
+    ViewBag.GridDataUrl = Url.Action("GridData");
+    ViewBag.ToolbarItem = "search,export";
+    ViewBag.IsPaging = "true";
+
+}
+@section customScript{
+    <script type="text/javascript">
+        columns = [[
+            { field: "FileName", title: "名称", width: 100, align: "center" },
+            { field: "DownPath", title: "地址", width: 100, align: "center" }
+        ]];
+
+        pageSize = 10;
+
+    </script>
+}
+@section searchHmtl{
+    <table>
+        <tr>
+            <td>搜索资源名称:</td>
+            <td>
+                <input class="easyui-textbox" type="text" aria-setsize="6" name="searchData" id="searchData" style="width: 120px;" />
+            </td>
+            
+            <td>查询条数</td>
+            <td><select class="easyui-combobox" name="ResultNum" id="ResultNum" data-options="valueField:'ResultNum',textField:'text',data:[{ResultNum:'10',text:'10条'},{ResultNum:'20',text:'20条'},{ResultNum:'50',text:'50条'},{ResultNum:'100',text:'100条'}],value:'10',editable:false" style="width:151px;"></select></td>
+        </tr>
+
+    </table>
+
+}
+
+

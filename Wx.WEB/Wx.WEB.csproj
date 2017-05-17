@@ -158,6 +158,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Common\WxHelper.cs" />
     <Compile Include="Common\Constants.cs" />
+    <Compile Include="Controllers\CrawlerController.cs" />
     <Compile Include="Controllers\WxController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PrivilegePRController.cs" />
@@ -457,6 +458,7 @@
     <Content Include="Views\PrivilegePR\PrRoleConfig.cshtml" />
     <Content Include="Views\PrivilegePR\PrStaffRoleConfig.cshtml" />
     <Content Include="Views\PrivilegePR\PrRolePriConfig.cshtml" />
+    <Content Include="Views\Crawler\CrawlerPan.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
