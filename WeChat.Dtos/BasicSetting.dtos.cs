@@ -1,21 +1,26 @@
 /* Options:
-Date: 2017-05-11 15:50:29
-Version: 1
+Date: 2017-05-16 10:41:18
+Version: 4.00
+Tip: To override a DTO option, remove "//" prefix before updating
 BaseUrl: http://osc.com:8889
 
 //GlobalNamespace: 
 //MakePartial: True
 //MakeVirtual: True
+//MakeInternal: False
 //MakeDataContractsExtensible: False
 //AddReturnMarker: True
 //AddDescriptionAsComments: True
 //AddDataContractAttributes: False
 //AddIndexesToDataMembers: False
+//AddGeneratedCodeAttributes: False
 //AddResponseStatus: False
 //AddImplicitVersion: 
 //InitializeCollections: True
+//ExportValueTypes: False
 //IncludeTypes: 
 //ExcludeTypes: 
+//AddNamespaces: 
 //AddDefaultXmlNamespace: http://schemas.servicestack.net/types
 */
 
@@ -28,6 +33,7 @@ using ServiceStack.DataAnnotations;
 using WeChat.ServiceModel.Base;
 using WeChat.Models;
 using WeChat.ServiceModel.PrivilegePR;
+using WeChat.ServiceModel.Crawler;
 using WeChat.ServiceModel.Wx;
 
 
@@ -73,7 +79,7 @@ namespace WeChat.Models
         public virtual string id { get; set; }
         public virtual string text { get; set; }
         public virtual string state { get; set; }
-//    public virtual bool checked { get; set; }
+//    public virtual bool? checked { get; set; }
         public virtual List<MenuPriView> children { get; set; }
         public virtual Attributes attributes { get; set; }
         public virtual string Pid { get; set; }
@@ -156,6 +162,49 @@ namespace WeChat.ServiceModel.Base
     }
 }
 
+namespace WeChat.ServiceModel.Crawler
+{
+
+    [Route("/CrawlerPan")]
+    public partial class CrawlerPan
+        : BaseRequest, IReturn<CrawlerPanResponse>
+    {
+        ///<summary>
+        ///查询参数
+        ///</summary>
+        [ApiMember(Name="SearchData", Description="查询参数", DataType="string", IsRequired=true)]
+        public virtual string SearchData { get; set; }
+
+        ///<summary>
+        ///页数
+        ///</summary>
+        [ApiMember(Name="pageIndex", Description="页数", DataType="int", IsRequired=true)]
+        public virtual int pageIndex { get; set; }
+
+        ///<summary>
+        ///一页多少
+        ///</summary>
+        [ApiMember(Name="pageSize", Description="一页多少", DataType="int", IsRequired=true)]
+        public virtual int pageSize { get; set; }
+
+        ///<summary>
+        ///查询总条数
+        ///</summary>
+        [ApiMember(Name="ResultNum", Description="查询总条数", DataType="int", IsRequired=true)]
+        public virtual int ResultNum { get; set; }
+    }
+
+    public partial class CrawlerPanResponse
+        : BaseResponse
+    {
+        ///<summary>
+        ///返回查询结果
+        ///</summary>
+        [ApiMember(Name="Reports", Description="返回查询结果", DataType="List", IsRequired=true)]
+        public virtual Report Reports { get; set; }
+    }
+}
+
 namespace WeChat.ServiceModel.PrivilegePR
 {
 
@@ -163,24 +212,45 @@ namespace WeChat.ServiceModel.PrivilegePR
     public partial class DepartConfig
         : BaseRequest, IReturn<DepartConfigResponse>
     {
+        ///<summary>
+        ///请求方法
+        ///</summary>
         [ApiMember(Name="RequestType", Description="请求方法", DataType="string", IsRequired=true)]
         public virtual short RequestType { get; set; }
 
+        ///<summary>
+        ///部门编号
+        ///</summary>
         [ApiMember(Name="DepartNo", Description="部门编号", DataType="string", IsRequired=true)]
         public virtual string DepartNo { get; set; }
 
+        ///<summary>
+        ///部门名称
+        ///</summary>
         [ApiMember(Name="DepartName", Description="部门名称", DataType="string", IsRequired=true)]
         public virtual string DepartName { get; set; }
 
+        ///<summary>
+        ///更新员工
+        ///</summary>
         [ApiMember(Name="Updatestaffno", Description="更新员工", DataType="string", IsRequired=true)]
         public virtual string Updatestaffno { get; set; }
 
+        ///<summary>
+        ///更新时间
+        ///</summary>
         [ApiMember(Name="Updatetime", Description="更新时间", DataType="string", IsRequired=true)]
         public virtual DateTime Updatetime { get; set; }
 
+        ///<summary>
+        ///备注
+        ///</summary>
         [ApiMember(Name="Remark", Description="备注", DataType="string", IsRequired=true)]
         public virtual string Remark { get; set; }
 
+        ///<summary>
+        ///有效标识
+        ///</summary>
         [ApiMember(Name="Usetag", Description="有效标识", DataType="string", IsRequired=true)]
         public virtual string Usetag { get; set; }
     }
@@ -188,6 +258,9 @@ namespace WeChat.ServiceModel.PrivilegePR
     public partial class DepartConfigResponse
         : BaseResponse
     {
+        ///<summary>
+        ///返回部门信息
+        ///</summary>
         [ApiMember(Name="QueryData", Description="返回部门信息", DataType="List", IsRequired=true)]
         public virtual Report QueryData { get; set; }
     }
@@ -228,24 +301,45 @@ namespace WeChat.ServiceModel.PrivilegePR
     public partial class RoleConfig
         : BaseRequest, IReturn<RoleConfigResponse>
     {
+        ///<summary>
+        ///请求方法
+        ///</summary>
         [ApiMember(Name="RequestType", Description="请求方法", DataType="string", IsRequired=true)]
         public virtual short RequestType { get; set; }
 
+        ///<summary>
+        ///角色编号
+        ///</summary>
         [ApiMember(Name="RoleNo", Description="角色编号", DataType="string", IsRequired=true)]
         public virtual string RoleNo { get; set; }
 
+        ///<summary>
+        ///部门名称
+        ///</summary>
         [ApiMember(Name="RoleName", Description="部门名称", DataType="string", IsRequired=true)]
         public virtual string RoleName { get; set; }
 
+        ///<summary>
+        ///更新员工
+        ///</summary>
         [ApiMember(Name="Updatestaffno", Description="更新员工", DataType="string", IsRequired=true)]
         public virtual string Updatestaffno { get; set; }
 
+        ///<summary>
+        ///更新时间
+        ///</summary>
         [ApiMember(Name="Updatetime", Description="更新时间", DataType="string", IsRequired=true)]
         public virtual DateTime Updatetime { get; set; }
 
+        ///<summary>
+        ///备注
+        ///</summary>
         [ApiMember(Name="Remark", Description="备注", DataType="string", IsRequired=true)]
         public virtual string Remark { get; set; }
 
+        ///<summary>
+        ///有效标识
+        ///</summary>
         [ApiMember(Name="Usetag", Description="有效标识", DataType="string", IsRequired=true)]
         public virtual string Usetag { get; set; }
     }
@@ -253,6 +347,9 @@ namespace WeChat.ServiceModel.PrivilegePR
     public partial class RoleConfigResponse
         : BaseResponse
     {
+        ///<summary>
+        ///返回部门信息
+        ///</summary>
         [ApiMember(Name="QueryData", Description="返回部门信息", DataType="List", IsRequired=true)]
         public virtual Report QueryData { get; set; }
     }
@@ -261,15 +358,27 @@ namespace WeChat.ServiceModel.PrivilegePR
     public partial class RolePower
         : BaseRequest, IReturn<RolePowerResponse>
     {
+        ///<summary>
+        ///请求方法
+        ///</summary>
         [ApiMember(Name="RequestType", Description="请求方法", DataType="string", IsRequired=true)]
         public virtual short RequestType { get; set; }
 
+        ///<summary>
+        ///角色编号
+        ///</summary>
         [ApiMember(Name="RoleNo", Description="角色编号", DataType="string", IsRequired=true)]
         public virtual string RoleNo { get; set; }
 
+        ///<summary>
+        ///菜单项
+        ///</summary>
         [ApiMember(Name="Menus", Description="菜单项", DataType="IList<string>", IsRequired=true)]
         public virtual IList<string> Menus { get; set; }
 
+        ///<summary>
+        ///操作权限
+        ///</summary>
         [ApiMember(Name="Handles", Description="操作权限", DataType="IList<string>", IsRequired=true)]
         public virtual IList<string> Handles { get; set; }
     }
@@ -282,6 +391,9 @@ namespace WeChat.ServiceModel.PrivilegePR
             Menus = new List<MenuPriView>{};
         }
 
+        ///<summary>
+        ///返回权限信息
+        ///</summary>
         [ApiMember(Name="QueryData", Description="返回权限信息", DataType="List", IsRequired=true)]
         public virtual Report QueryData { get; set; }
 
@@ -292,24 +404,45 @@ namespace WeChat.ServiceModel.PrivilegePR
     public partial class StaffConfig
         : BaseRequest, IReturn<StaffConfigResponse>
     {
+        ///<summary>
+        ///请求方法
+        ///</summary>
         [ApiMember(Name="RequestType", Description="请求方法", DataType="string", IsRequired=true)]
         public virtual short RequestType { get; set; }
 
+        ///<summary>
+        ///员工编号
+        ///</summary>
         [ApiMember(Name="StaffNo", Description="员工编号", DataType="string", IsRequired=true)]
         public virtual string StaffNo { get; set; }
 
+        ///<summary>
+        ///员工姓名
+        ///</summary>
         [ApiMember(Name="StaffName", Description="员工姓名", DataType="string", IsRequired=true)]
         public virtual string StaffName { get; set; }
 
+        ///<summary>
+        ///操作员卡号
+        ///</summary>
         [ApiMember(Name="OperatorCardNo", Description="操作员卡号", DataType="string", IsRequired=true)]
         public virtual string OperatorCardNo { get; set; }
 
+        ///<summary>
+        ///员工密码
+        ///</summary>
         [ApiMember(Name="OperCardPwd", Description="员工密码", DataType="string", IsRequired=true)]
         public virtual string OperCardPwd { get; set; }
 
+        ///<summary>
+        ///部门编号
+        ///</summary>
         [ApiMember(Name="DepartNo", Description="部门编号", DataType="string", IsRequired=true)]
         public virtual string DepartNo { get; set; }
 
+        ///<summary>
+        ///是否离职
+        ///</summary>
         [ApiMember(Name="DimissionTag", Description="是否离职", DataType="string", IsRequired=true)]
         public virtual string DimissionTag { get; set; }
     }
@@ -317,6 +450,9 @@ namespace WeChat.ServiceModel.PrivilegePR
     public partial class StaffConfigResponse
         : BaseResponse
     {
+        ///<summary>
+        ///返回员工信息
+        ///</summary>
         [ApiMember(Name="QueryData", Description="返回员工信息", DataType="List", IsRequired=true)]
         public virtual Report QueryData { get; set; }
     }
@@ -325,12 +461,21 @@ namespace WeChat.ServiceModel.PrivilegePR
     public partial class StaffRole
         : BaseRequest, IReturn<StaffRoleResponse>
     {
+        ///<summary>
+        ///请求方法
+        ///</summary>
         [ApiMember(Name="RequestType", Description="请求方法", DataType="string", IsRequired=true)]
         public virtual short RequestType { get; set; }
 
+        ///<summary>
+        ///员工编号
+        ///</summary>
         [ApiMember(Name="StaffNo", Description="员工编号", DataType="string", IsRequired=true)]
         public virtual string StaffNo { get; set; }
 
+        ///<summary>
+        ///权限
+        ///</summary>
         [ApiMember(Name="Roles", Description="权限", DataType="IList<string>", IsRequired=true)]
         public virtual IList<string> Roles { get; set; }
     }
@@ -338,6 +483,9 @@ namespace WeChat.ServiceModel.PrivilegePR
     public partial class StaffRoleResponse
         : BaseResponse
     {
+        ///<summary>
+        ///返回权限信息
+        ///</summary>
         [ApiMember(Name="QueryData", Description="返回权限信息", DataType="List", IsRequired=true)]
         public virtual Report QueryData { get; set; }
     }
@@ -363,33 +511,63 @@ namespace WeChat.ServiceModel.Wx
     public partial class CreateOrder
         : BaseRequest, IReturn<CreateOrderResponse>
     {
+        ///<summary>
+        ///商品描述
+        ///</summary>
         [ApiMember(Name="Body", Description="商品描述", DataType="string", IsRequired=true)]
         public virtual string Body { get; set; }
 
+        ///<summary>
+        ///商品详情
+        ///</summary>
         [ApiMember(Name="Detail", Description="商品详情", DataType="string")]
         public virtual string Detail { get; set; }
 
+        ///<summary>
+        ///附加数据
+        ///</summary>
         [ApiMember(Name="Attach", Description="附加数据", DataType="string")]
         public virtual string Attach { get; set; }
 
+        ///<summary>
+        ///商户订单号
+        ///</summary>
         [ApiMember(Name="OutTradeNo", Description="商户订单号", DataType="string", IsRequired=true)]
         public virtual string OutTradeNo { get; set; }
 
+        ///<summary>
+        ///总金额
+        ///</summary>
         [ApiMember(Name="TotalFee", Description="总金额", DataType="int", IsRequired=true)]
         public virtual int TotalFee { get; set; }
 
+        ///<summary>
+        ///终端IP
+        ///</summary>
         [ApiMember(Name="SpbillCreateIp", Description="终端IP", DataType="string", IsRequired=true)]
         public virtual string SpbillCreateIp { get; set; }
 
+        ///<summary>
+        ///商品标记
+        ///</summary>
         [ApiMember(Name="GoodsTag", Description="商品标记", DataType="string")]
         public virtual string GoodsTag { get; set; }
 
+        ///<summary>
+        ///用户标识
+        ///</summary>
         [ApiMember(Name="Openid", Description="用户标识", DataType="string", IsRequired=true)]
         public virtual string Openid { get; set; }
 
+        ///<summary>
+        ///指定支付方式
+        ///</summary>
         [ApiMember(Name="LimitPay", Description="指定支付方式", DataType="string", IsRequired=true)]
         public virtual string LimitPay { get; set; }
 
+        ///<summary>
+        ///商品ID
+        ///</summary>
         [ApiMember(Name="ProductId", Description="商品ID", DataType="string")]
         public virtual string ProductId { get; set; }
     }
@@ -397,6 +575,9 @@ namespace WeChat.ServiceModel.Wx
     public partial class CreateOrderResponse
         : BaseResponse
     {
+        ///<summary>
+        ///预支付交易会话标识
+        ///</summary>
         [ApiMember(Name="PrepayId", Description="预支付交易会话标识", DataType="string", IsRequired=true)]
         public virtual string PrepayId { get; set; }
     }
