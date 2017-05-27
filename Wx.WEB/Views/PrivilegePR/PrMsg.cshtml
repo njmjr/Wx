@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.Title = "PrMsg";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .select {
+         background-image: url("~/Content/images/fldih.png");
+         background-repeat: no-repeat;
+         background-position: left top;
+     }
+</style>
+<div class="easyui-layout" data-options="fit:true">
+    <div data-options="region:'west', split:true, minWidth:100, width:150,id:'msg',headerCls:'lefttop',collapsible:false">
+        <ul class="easyui-datalist" lines="true" style="width:150px;height:250px">
+            <li style="list-style-type:none; margin-top:12px; margin-left:0px;" onclick="msgHandle(1)"><span class="icon-inMsg">&nbsp;&nbsp;</span>写新消息</li>
+            <li style="list-style-type:none; margin-top:12px;background-image: url('~/Content/images/fldih.png';" class="select" onclick="msgHandle(2)"><span class="icon-inbox">&nbsp;&nbsp;</span>收件箱</li>
+            <li style="list-style-type:none; margin-top:12px;" onclick="msgHandle(3)"><span class="icon-select">&nbsp;&nbsp;</span>已发送</li>
+        </ul>
+    </div>
+    <div data-options="region:'center'">
+        <div id="main-tab" class="easyui-tabs" data-options="fit:true, border:false">
+            <iframe id="msgFrame" width="100%" height="100%" frameborder="0" src="@Url.Action("PrMsgInbox")" marginheight="0" marginwidth="0"></iframe>
+        </div>
+    </div>
+</div>
+@section footer{
+    <script type="text/javascript">
+        function msgHandle(index) {
+            if (index == 1) {
+                $("#msgFrame").attr("src", "@Url.Action("PrMsgNewMsg")");
+            } else if (index == 2) {
+                $("#msgFrame").attr("src", "@Url.Action("PrMsgInbox")");
+            } else if (index == 3) {
+                $("#msgFrame").attr("src", "@Url.Action("PrMsgSentItems")");
+            }
+        }
+    </script>
+}

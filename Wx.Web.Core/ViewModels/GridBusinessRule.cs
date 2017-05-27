@@ -109,5 +109,16 @@
         /// 菜单URL
         /// </summary>
         public string TreeUrl { get; set; }
+
+        /// <summary>
+        /// 回复URL
+        /// </summary>
+        public string ReturnUrl { get; set; }
+        /// <summary>
+        /// 转发URL
+        /// </summary>
+        public string TransferUrl { get; set; }
+
+        public string DownUrl { get; set; }
     }
 }

@@ -1,0 +1,323 @@
+﻿@model Wx.WEB.Core.ViewModels.GridBusinessRule
+@{
+    var roles = ViewBag.Roles == null ? "{}" : ViewBag.Roles;
+    var departs = ViewBag.Departs == null ? "{}" : ViewBag.Departs;
+    var staffs = ViewBag.Staffs == null ? "{}" : ViewBag.Staffs;
+    var title = ViewBag.Title == null ? "" : ViewBag.Title;
+    var id = ViewBag.Id == null ? "" : ViewBag.Id;
+    var level = ViewBag.Level == null ? "0" : ViewBag.Level;
+    var state = ViewBag.State == null ? "" : ViewBag.State;
+    var body = ViewBag.Body == null ? "" : ViewBag.Body;
+    var time = ViewBag.Time == null ? "" : ViewBag.Time;
+    var sender = ViewBag.Sender == null ? "" : ViewBag.Sender;
+    var fileNo = ViewBag.FileNo == null ? "" : ViewBag.FileNo;
+    var isPage = ViewBag.IsPage == null ? "" : ViewBag.IsPage;
+    var boxfrom = ViewBag.Boxfrom == null ? "" : ViewBag.Boxfrom;
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>写新消息</title>
+    <script src="~/Scripts/easyui152/jquery.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/easyui152/jquery.easyui.min.js"></script>
+    <script src="~/Scripts/jquery.linq.js" type="text/javascript"></script>
+    <link href="~/Content/easyui152/themes/metro/easyui.css" rel="stylesheet" />
+    <link href="~/Content/easyui152/themes/icon.css" rel="stylesheet" />
+    <link href="~/Content/easyui152/demo.css" rel="stylesheet" />
+    <link href="~/Content/wx-icons.css" rel="stylesheet" />
+    <link href="~/Content/wx.css" rel="stylesheet" />
+    <script src="~/Scripts/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+    <script src="~/Scripts/json2.js" type="text/javascript"></script>
+    <script src="~/Scripts/Wx.global.js" type="text/javascript"></script>
+    <script src="~/Scripts/Wx.easyui.js" type="text/javascript"></script>
+    <script src="~/Scripts/Wx.data.js" type="text/javascript"></script>
+</head>
+<body>
+    <div class="infos">
+        <ul id="infos"></ul>
+    </div>
+    <div class="inputList" style="margin-left:10px;">
+        <input id="msgId" type="hidden" value="@id" />
+        <input id="fileNo" type="hidden" value="@fileNo" />
+        <input id="boxfrom" type="hidden" value="@boxfrom" />
+        <a id="btnBefore" href="javascript:void(0);" data-options="iconCls:'icon-search',width:80" onclick="MsgBeforeHandle()" class="easyui-linkbutton" style="display: none;">上一条</a>
+        <a id="btnNext" href="javascript:void(0);" data-options="iconCls:'icon-search',width:80" onclick="MsgNextHandle()" class="easyui-linkbutton" style="display: none;">下一条</a>
+        <a id="btnForward" href="javascript:void(0);" data-options="iconCls:'icon-search',width:80" onclick="MsgForwardHandle()" class="easyui-linkbutton" style="display: none;">转发</a>
+        <a id="btnReply" href="javascript:void(0);" data-options="iconCls:'icon-search',width:80" onclick="MsgReplyHandle()" class="easyui-linkbutton" style="display: none;">回复</a>
+        <a id="btnSend" href="javascript:void(0);" data-options="iconCls:'icon-search',width:80" onclick="MsgSendHandle()" class="easyui-linkbutton" style="display: none;">发送</a>
+    </div>
+    <hr style="clear:both;" />
+    <div class="easyui-layout" data-options="fit:true">
+        <table cellpadding="8" style="margin-left:10px;">
+            <tr>
+                <td id="sendOrReply">收件人:</td>
+                <td>角色:</td>
+                <td><input class="easyui-tagbox" id="roleNo" style="width:100%"></td>
+                <td>部门:</td>
+                <td><input class="easyui-tagbox" id="departNo" style="width:100%"></td>
+                <td>员工:</td>
+                <td><input class="easyui-tagbox" id="staffNo" style="width:100%"></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>主题:</td>
+                <td colspan="7"><input class="easyui-textbox" type="text" value="@title @time" name="title" id="title" style="width: 100%;"></td>
+            </tr>
+            <tr>
+                <td>级别:</td>
+                <td colspan="7">
+                    <select class="easyui-combobox" name="state" name="grade" id="grade" labelposition="top" style="width:100%;">
+                        <option value="0">一般</option>
+                        <option value="1">重要</option>
+                        <option value="2">紧急</option>
+                        <option value="3">特急</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>内容:</td>
+                <td colspan="7"><input class="easyui-textbox" type="text" value="@body" name="content" id="content" style="width: 100%; height:100px" data-options="multiline:true"></td>
+            </tr>
+            <tr>
+                <td>附件:</td>
+                <td colspan="7">
+                    <div id="file1" >
+                        <input class="easyui-filebox" labelposition="top" name="fileUpload" id="fileUpload" data-options="prompt:'选择文件...',onChange:FileChange" style="width:100%;" />
+                    </div>
+                    <div id="file2" style="display:none;" ><a id="btnDown" href="@Model.DownUrl?fileNo=@fileNo">下载</a></div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script type="text/javascript">
+    var roles = @Html.Raw(roles);
+    var departs = @Html.Raw(departs);
+    var staffs = @Html.Raw(staffs);
+    var fileData;
+    var fileName;
+    $(function () {
+        $('#roleNo').tagbox({
+            hasDownArrow: true,
+            valueField: 'id',
+            textField: 'desc',
+            data: roles
+        });
+        $('#departNo').tagbox({
+            hasDownArrow: true,
+            valueField: 'id',
+            textField: 'desc',
+            data: departs
+        });
+        var staff="";
+        if ("@sender".toString() != ""&&"@sender"!="@Session["staffname"]") {
+            staff = getStaff("@sender").id + ":@sender";
+        }
+        $('#staffNo').tagbox({
+            hasDownArrow: true,
+            valueField: 'id',
+            textField: 'desc',
+            value:staff,
+            data: staffs
+        });
+        if (@level) {
+            $('#grade').combobox('setValue', '@level');
+    }
+
+        if ("@id".toString() == "" ||"@isPage".toString() == "1") {
+            $("#btnSend").show();
+
+        } else {
+            Showbutton();
+        }
+    var fileNo = "@fileNo";
+    if (fileNo==""||fileNo=="undefined") {
+        //$("#file2").hide();
+        //document.getElementById("file2").style.display="none";
+        //document.getElementById("file1").style.display="";
+        //$("#file1").show();
+       // $("#file1").show();
+        
+    } else {
+        //document.getElementById("file1").style.display="none";
+        //document.getElementById("file2").style.display="";
+        $("#file1").hide();
+       $("#file2").show();
+    }
+    });
+
+    function MsgBeforeHandle() {
+        var msgId = $("#msgId").val();
+        var boxfrom = $("#boxfrom").val();
+        var params = { "msgId": msgId, "msgType": "1","boxfrom":boxfrom};
+        beforeOrNext(params);
+    }
+
+    function MsgNextHandle() {
+        var msgId = $("#msgId").val();
+        var boxfrom = $("#boxfrom").val();
+        var params = { "msgId": msgId, "msgType": "0","boxfrom":boxfrom};
+        beforeOrNext(params);
+    }
+
+    function getStaff(staffNo) {
+        var query = $.Enumerable.From(staffs)
+            .Where(function (x) {
+                return x.id == staffNo || x.text ==staffNo;
+            }).First();
+        if (query) {
+            return query;
+        }
+        return null;
+    }
+
+    function beforeOrNext(params) {
+        $.ajax({
+            type: "POST",
+            url: "@Model.EditUrl",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(params),
+            datatype: 'json',
+            success: function(result) {
+                result = JSON.parse(result);
+                if (result) {
+                    if (result.ResponseStatus.ErrorCode === 'OK') {
+                        $('#title').textbox('setValue',result.Msg.MSGTITLE+$.wx.tools.formatDate(result.Msg.MSGTIME));
+                        $('#grade').combobox('setValue', result.Msg.MSGLEVEL);
+                        $('#content').textbox('setValue',result.Msg.MSGBODY);
+                        $('#staffNo').tagbox({ value: result.Msg.MSGGER+":"+ getStaff(result.Msg.MSGGER).text});
+                        $('#msgId').val(result.Msg.MSGID);
+                        $("#btnDown").attr("href","@Model.DownUrl?fileNo="+result.Msg.FILENO);
+                        setTimeout(function() { $.messager.progress('close'); }, 1000);
+                    } else {
+                        var errors = '';
+                        $.each(result.ResponseStatus.Errors, function(i, o) {
+                            errors = errors + "<li>" + (o.ErrorCode != null ? o.ErrorCode + ':' : '') + o.Message + "</li>";
+                        });
+                        $.wx.easyui.msg.error(errors, '错误');
+                    }
+                }
+            }
+        });
+    }
+
+    function FileChange() {
+        var file = document.getElementById('filebox_file_id_1').files[0];
+        fileName = file.name;
+        var fileSize = 0;
+        var errors = '';
+        if (file.size > 1024 * 1024) {
+            fileSize = Math.round(file.size * 100 / (1024 * 1024)) / 100;
+
+            if (fileSize > 1) {
+                errors += "<li>附件超过1MB，禁止上传</li>";
+                $.wx.easyui.msg.error(errors, '错误');
+                return;
+            }
+        }
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function (ret) {
+            fileData = reader.result;
+        }
+    }
+
+    function MsgSendHandle() {
+        var roleNos = $('#roleNo').val();
+        var staffNos = $('#staffNo').val();
+        var departNos = $('#departNo').val();
+        var grade = $('#grade').combobox('getValue');
+        var title = $('#title').textbox('getValue').trim();
+        var content = $('#content').textbox('getValue');
+        var fileNo = $('#fileNo').val();
+        var error = '';
+        if (roleNos==""&&staffNos==""&&departNos=="") {
+            error += "<li>请选择收件人</li>";
+        }
+        if (title=="") {
+            error += "<li>请输入消息主题</li>";
+        }
+        if (content=="") {
+            error += "<li>请输入消息内容</li>";
+        }
+        if (error!="") {
+            $.wx.easyui.msg.error(error, '错误');
+            return;
+        }
+
+        var params = { "roleNos": roleNos, "staffNos": staffNos,"departNos": departNos,"grade": grade,"title": title,"content": content,"fileName": fileName,"fileData":fileData,"fileNo":fileNo};
+
+        $.ajax({
+            type: "POST",
+            url: "@Model.PermmitUrl",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(params),
+            datatype: 'json',
+            success: function(result) {
+                result = JSON.parse(result);
+                if (result) {
+                    if (result.ResponseStatus.ErrorCode === 'OK') {
+                        $('#title').textbox('setValue',"");
+                        $('#grade').combobox('setValue', "0");
+                        $('#content').textbox('setValue',"");
+                        $('#staffNo').tagbox({ value: ""});
+                        $('#msgId').val();
+                        $("#btnDown").attr("href","");
+                        $.wx.easyui.msg.tip("<li class='infos'>消息发送成功</li>", '', 3000);
+                        setTimeout(function() { $.messager.progress('close'); }, 1000);
+                    } else {
+                        var errors = '';
+                        $.each(result.ResponseStatus.Errors, function(i, o) {
+                            errors = errors + "<li>" + (o.ErrorCode != null ? o.ErrorCode + ':' : '') + o.Message + "</li>";
+                        });
+                        $.wx.easyui.msg.error(errors, '错误');
+                    }
+                }
+            }
+        });
+    }
+
+    function MsgForwardHandle() {
+        var title = "FW: "+ $('#title').textbox('getValue');
+        $('#title').textbox('setValue',title);
+        var content ="---原始消息----\r\n"+ $('#content').textbox('getValue');
+        $('#content').textbox('setValue',content);
+        Clearbutton();
+        $("#sendOrReply").text("发件人:");
+        $("#btnSend").show();
+        $('#roleNo').tagbox({ value: "" });
+        $('#departNo').tagbox({ value: "" });
+        $('#staffNo').tagbox({ value: "" });
+    }
+
+    function MsgReplyHandle() {
+        var title = "RE: "+ $('#title').textbox('getValue');
+        $('#title').textbox('setValue',title);
+        var content ="---原始消息----\r\n"+ $('#content').textbox('getValue');
+        $('#content').textbox('setValue',content);
+        Clearbutton();
+        $("#sendOrReply").text("发件人:");
+        $("#btnSend").show();
+        $('#roleNo').tagbox({ value: "" });
+        $('#departNo').tagbox({ value: "" });
+        $('#staffNo').tagbox({ value: "@Session["StaffNo"]:@Session["staffname"]" });
+    }
+
+    function Showbutton() {
+        $("#btnBefore").show();
+        $("#btnNext").show();
+        $("#btnForward").show();
+        $("#btnReply").show();
+    }
+    function Clearbutton() {
+        $("#btnBefore").hide();
+        $("#btnNext").hide();
+        $("#btnForward").hide();
+        $("#btnReply").hide();
+    }
+    </script>
+</body>
+</html>

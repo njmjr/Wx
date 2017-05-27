@@ -70,7 +70,7 @@ namespace Wx.WEB.Controllers
             return View();
         }
 
-        public ActionResult Login()
+        public ActionResult LoginSSo()
         {
 
             string type = Request.QueryString["type"];

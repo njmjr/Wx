@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Configuration;
 using System.Web.Mvc;
+using WeChat.ServiceModel.PrivilegePR;
+using Wx.WEB.Core.Common;
 
 namespace Wx.Web.Core.Mvc.Filter
 {
@@ -30,20 +32,20 @@ namespace Wx.Web.Core.Mvc.Filter
                 string url = filterContext.HttpContext.Request.Url.AbsolutePath.Substring(1).ToLower();
                 if (url != "")
                 {
-                    //ForeVerify request = new ForeVerify()
-                    //{
-                    //    StaffNo = filterContext.HttpContext.Session["StaffNo"].ToString(),
-                    //    DepartNo = filterContext.HttpContext.Session["DepartNo"].ToString(),
-                    //    Url = url
-                    //};
-                    //ForeVerifyResponse response = WeChatHelper.PostService<ForeVerify, ForeVerifyResponse>("ForeVerify", request);
-                    //if (response.ResponseStatus.ErrorCode != "OK")
-                    //{
-                    //    filterContext.Result = new ContentResult
-                    //    {
-                    //        Content = "权限错误"
-                    //    };
-                    //}
+                    ForeVerify request = new ForeVerify()
+                    {
+                        StaffNo = filterContext.HttpContext.Session["StaffNo"].ToString(),
+                        DepartNo = filterContext.HttpContext.Session["DepartNo"].ToString(),
+                        Url = url
+                    };
+                    ForeVerifyResponse response = WeChatHelper.PostService<ForeVerify, ForeVerifyResponse>("ForeVerify", request);
+                    if (response.ResponseStatus.ErrorCode != "OK")
+                    {
+                        filterContext.Result = new ContentResult
+                        {
+                            Content = "权限错误"
+                        };
+                    }
                 }
             }
         }

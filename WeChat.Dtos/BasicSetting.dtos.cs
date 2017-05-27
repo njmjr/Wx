@@ -1,5 +1,5 @@
 /* Options:
-Date: 2017-05-16 10:41:18
+Date: 2017-05-26 17:16:06
 Version: 4.00
 Tip: To override a DTO option, remove "//" prefix before updating
 BaseUrl: http://osc.com:8889
@@ -111,6 +111,21 @@ namespace WeChat.Models
         public virtual string USETAG { get; set; }
     }
 
+    public partial class TfBMsg
+    {
+        public virtual int MSGID { get; set; }
+        public virtual string MSGPOS { get; set; }
+        public virtual string MSGTITLE { get; set; }
+        public virtual string MSGBODY { get; set; }
+        public virtual string MSGLEVEL { get; set; }
+        public virtual DateTime MSGTIME { get; set; }
+        public virtual string MSGDEPT { get; set; }
+        public virtual string MSGGER { get; set; }
+        public virtual string MSGATTACH { get; set; }
+        public virtual string FILENO { get; set; }
+        public virtual string STATE { get; set; }
+    }
+
     public partial class WxService
     {
         public virtual string SERVICEID { get; set; }
@@ -159,6 +174,8 @@ namespace WeChat.ServiceModel.Base
         public virtual List<MenuView> Menus { get; set; }
         public virtual IEnumerable<WxService> Services { get; set; }
         public virtual IEnumerable<Role> Roles { get; set; }
+        public virtual IEnumerable<InsideDepart> Departs { get; set; }
+        public virtual IEnumerable<InsideStaff> Staffs { get; set; }
     }
 }
 
@@ -295,6 +312,167 @@ namespace WeChat.ServiceModel.PrivilegePR
     public partial class ForeVerifyResponse
         : BaseResponse
     {
+    }
+
+    [Route("/Msg")]
+    public partial class Msg
+        : BaseRequest, IReturn<MsgResponse>
+    {
+        public Msg()
+        {
+            Roles = new List<string>{};
+            Departs = new List<string>{};
+            StaffNos = new List<string>{};
+            UpLoadFile = new byte[]{};
+            MsgIds = new List<string>{};
+        }
+
+        ///<summary>
+        ///请求方法
+        ///</summary>
+        [ApiMember(Name="RequestType", Description="请求方法", DataType="short", IsRequired=true)]
+        public virtual short RequestType { get; set; }
+
+        ///<summary>
+        ///部门编号
+        ///</summary>
+        [ApiMember(Name="DepartNo", Description="部门编号", DataType="string", IsRequired=true)]
+        public virtual string DepartNo { get; set; }
+
+        ///<summary>
+        ///员工编号
+        ///</summary>
+        [ApiMember(Name="StaffNo", Description="员工编号", DataType="string", IsRequired=true)]
+        public virtual string StaffNo { get; set; }
+
+        ///<summary>
+        ///页数
+        ///</summary>
+        [ApiMember(Name="PageIndex", Description="页数", DataType="int")]
+        public virtual int PageIndex { get; set; }
+
+        ///<summary>
+        ///每页记录数
+        ///</summary>
+        [ApiMember(Name="PageSize", Description="每页记录数", DataType="int")]
+        public virtual int PageSize { get; set; }
+
+        ///<summary>
+        ///消息Id
+        ///</summary>
+        [ApiMember(Name="MsgId", Description="消息Id", DataType="string")]
+        public virtual string MsgId { get; set; }
+
+        ///<summary>
+        ///消息主题
+        ///</summary>
+        [ApiMember(Name="Title", Description="消息主题", DataType="string")]
+        public virtual string Title { get; set; }
+
+        ///<summary>
+        ///消息内容
+        ///</summary>
+        [ApiMember(Name="Content", Description="消息内容", DataType="string")]
+        public virtual string Content { get; set; }
+
+        ///<summary>
+        ///消息级别
+        ///</summary>
+        [ApiMember(Name="Level", Description="消息级别", DataType="string")]
+        public virtual string Level { get; set; }
+
+        ///<summary>
+        ///查询类型
+        ///</summary>
+        [ApiMember(Name="MsgType", Description="查询类型", DataType="string")]
+        public virtual string MsgType { get; set; }
+
+        ///<summary>
+        ///接收角色
+        ///</summary>
+        [ApiMember(Name="Roles", Description="接收角色", DataType="List<string>")]
+        public virtual List<string> Roles { get; set; }
+
+        ///<summary>
+        ///接收部门
+        ///</summary>
+        [ApiMember(Name="Departs", Description="接收部门", DataType="List<string>")]
+        public virtual List<string> Departs { get; set; }
+
+        ///<summary>
+        ///接收员工
+        ///</summary>
+        [ApiMember(Name="StaffNos", Description="接收员工", DataType="List<string>")]
+        public virtual List<string> StaffNos { get; set; }
+
+        ///<summary>
+        ///上传附件名称
+        ///</summary>
+        [ApiMember(Name="FileName", Description="上传附件名称", DataType="string")]
+        public virtual string FileName { get; set; }
+
+        ///<summary>
+        ///上传附件
+        ///</summary>
+        [ApiMember(Name="UpLoadFile", Description="上传附件", DataType="byte[]")]
+        public virtual byte[] UpLoadFile { get; set; }
+
+        ///<summary>
+        ///附件编号
+        ///</summary>
+        [ApiMember(Name="FileNo", Description="附件编号", DataType="string")]
+        public virtual string FileNo { get; set; }
+
+        ///<summary>
+        ///消息S
+        ///</summary>
+        [ApiMember(Name="MsgIds", Description="消息S", DataType="List<string>")]
+        public virtual List<string> MsgIds { get; set; }
+
+        ///<summary>
+        ///收发0收1发
+        ///</summary>
+        [ApiMember(Name="Boxfrom", Description="收发0收1发", DataType="string")]
+        public virtual string Boxfrom { get; set; }
+    }
+
+    public partial class MsgResponse
+        : BaseResponse
+    {
+        public MsgResponse()
+        {
+            DownFile = new byte[]{};
+        }
+
+        ///<summary>
+        ///返回信息
+        ///</summary>
+        [ApiMember(Name="QueryData", Description="返回信息", DataType="List", IsRequired=true)]
+        public virtual Report QueryData { get; set; }
+
+        ///<summary>
+        ///消息:0下一条，1上一条
+        ///</summary>
+        [ApiMember(Name="Msg", Description="消息:0下一条，1上一条", DataType="int")]
+        public virtual TfBMsg Msg { get; set; }
+
+        ///<summary>
+        ///下载附件
+        ///</summary>
+        [ApiMember(Name="DownFile", Description="下载附件", DataType="byte[]")]
+        public virtual byte[] DownFile { get; set; }
+
+        ///<summary>
+        ///下载附件名称
+        ///</summary>
+        [ApiMember(Name="FileName", Description="下载附件名称", DataType="string")]
+        public virtual string FileName { get; set; }
+
+        ///<summary>
+        ///收件箱个数
+        ///</summary>
+        [ApiMember(Name="InboxNums", Description="收件箱个数", DataType="int")]
+        public virtual int InboxNums { get; set; }
     }
 
     [Route("/RoleConfig")]

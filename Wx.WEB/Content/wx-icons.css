@@ -521,3 +521,7 @@
 
 .icon_menu {background:url('images/leftico.png') no-repeat;width:18px; height:18px;}
 .icon-excel{background:url('images/excel.png') no-repeat center center;}
+.icon-zhuanfa{background:url('images/zhuanfa.png') no-repeat center center;}
+.icon-inMsg{background:url('images/inMsg.png') no-repeat center center;height: 16px; padding-left: 18px; }
+.icon-select{background:url('images/select.png') no-repeat center center;height: 16px; padding-left: 18px; }
+.icon-inbox{background:url('images/inbox.png') no-repeat center center;height: 16px; padding-left: 18px; }

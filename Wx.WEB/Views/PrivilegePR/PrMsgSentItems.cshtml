@@ -1,0 +1,108 @@
+﻿@model Wx.WEB.Core.ViewModels.GridBusinessRule
+@{
+    ViewBag.Title = "PrMsgSentItems";
+    Layout = "~/Views/Shared/_CURDLayout.cshtml";
+}
+@section customScript{
+    <script src="~/Scripts/common.js"></script>
+    <script type="text/javascript">
+    columns = [
+        [
+            { field: "MSGID",title: "MSGID", hidden: true },
+            { field: "MSGSTATE",title: "MSGSTATE", hidden: true },
+            { field: "MSGGER", title: "发件人", width: 80, align: "center" },
+            { field: "MSGTITLE", title: "主题", width: 80, align: "center" },
+            { field: "MSGLEVEL",title: "MSGLEVEL", hidden: true },
+            { field: "MSGBODY",title: "MSGBODY", hidden: true },
+            { field: "MSGLEVELNAME", title: "级别", width: 80, align: "center" },
+            { field: "FILENO",  hidden: true },
+            { field: "MSGTIME", title: "日期", width: 120, align: "center" , formatter: function (value) { return $.wx.tools.formatDate(value); }}
+        ]
+    ];
+    singleSelect = false;
+
+    bindSubmitRequest = function() {
+        if (submitRequest) {
+            var selectRows = grid.datagrid("getSelections");
+            var ids = $.Enumerable.From(selectRows).Select(function(m) { return m.@Model.PrimaryKey; }).ToArray();
+            submitRequest.ids = ids;
+        }
+    };
+
+    function DbclickRow(rowIndex, rowData) {
+        var param = "?";
+        param += "id=" + rowData.MSGID;
+        param += "&title=" + rowData.MSGTITLE;
+        param += "&level=" + rowData.MSGLEVEL;
+        param += "&state=" + rowData.MSGSTATE;
+        param += "&body=" + rowData.MSGBODY;
+        param += "&time=" + $.wx.tools.formatDate(rowData.MSGTIME);
+        param += "&sender=" + rowData.MSGGER;
+        param += "&fileNo=" + rowData.FILENO;
+        param += "&boxfrom=1";
+        param += "&isPage=0";
+        window.location.href = "@Url.Action("PrMsgNewMsg")"+param;
+    }
+
+    deleteFunction = function() {
+        $.wx.easyui.info.clear();
+        var selectRows = grid.datagrid("getSelections");
+        if (selectRows.length == 0) {
+            $.wx.easyui.msg.warning("请先选中要删除的行。");
+            return;
+        }
+        var ids = $.Enumerable.From(selectRows).Select(function(m) { return m.@Model.PrimaryKey; }).ToArray();
+        var params = {"msgIds":ids,"msgType":"1"}
+        $.wx.easyui.msg.confirm("是否要删除所有选中的行？", null, function() {
+            $.ajax({
+                type: "POST",
+                url: "@Model.DeleteUrl",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(params),
+                success: function(result) {
+                    result = JSON.parse(result);
+                    if (result) {
+                        if (result.ResponseStatus.ErrorCode === 'OK') {
+                            $.wx.easyui.msg.tip("<li class='infos'>消息删除成功</li>", '', 3000);
+                            setTimeout(function() { $.messager.progress('close'); }, 1000);
+                            $("#grid-@Model.GridId").datagrid("reload");
+                            } else {
+                                var errors = '';
+                                $.each(result.ResponseStatus.Errors, function(i, o) {
+                                    errors = errors + "<li>" + (o.ErrorCode != null ? o.ErrorCode + ':' : '') + o.Message + "</li>";
+                                });
+                                $.wx.easyui.msg.error(errors, '错误');
+                            }
+                        }
+                    }
+                });
+            });
+        };
+        dotransferfunction = function() {
+            var selectRows = grid.datagrid("getSelections");
+            var errors = '';
+            if (selectRows.length>1) {
+                errors += "<li>请选择一条回复的消息</li>";
+            }
+            if (errors!="") {
+                $.wx.easyui.msg.error(errors, '错误');
+                return;
+            }
+            var param = "?";
+            param += "id=" + selectRows[0].MSGID;
+            param += "&title=" + "FW："+selectRows[0].MSGTITLE;
+            param += "&level=" + selectRows[0].MSGLEVEL;
+            param += "&state=" + selectRows[0].MSGSTATE;
+            param += "&body=" + selectRows[0].MSGBODY;
+            param += "&time=" + $.wx.tools.formatDate(selectRows[0].MSGTIME);
+            param += "&sender=" + selectRows[0].MSGGER;
+            param += "&fileNo=" + selectRows[0].FILENO;
+            param += "&isPage=1";
+            window.location.href = "@Url.Action("PrMsgNewMsg")" + param;
+
+        }
+        function loadError() {
+            $.onecard.easyui.msg.error("远程数据载入失败，请重试或检查参数。");
+        }
+    </script>
+}

@@ -56,6 +56,12 @@
         var permmitfunction = function() {
 
         };
+        var doreturnmsgfunction = function() {
+
+        };
+        var dotransferfunction = function() {
+
+        };
 
         var deleteFunction = function() {
             $.wx.easyui.info.clear();
@@ -79,9 +85,15 @@
         var clickRow = function(rowIndex, rowData) {
 
         };
+        var DbclickRow = function(rowIndex, rowData) {
+
+        };
+        var rowStylerLoadInit = function(index, row) {
+
+        };
         var customloadSuccess = function(data) {
 
-        }
+        };
     </script>
     @RenderSection("paramInit", false)
     <script type="text/javascript">
@@ -106,31 +118,29 @@
             searchCustomerFunc(query);
         }
     }
-        var submitFunc = function() {
+    var submitFunc = function() {
 
-            $.wx.easyui.info.clear();
-            if ($('#detailForm').form('validate')) {
-                $.messager.progress({ title: '正在处理中', msg: '正在处理中...' });
-                var formData = $.wx.filter.queryParamByFormId('detailForm');
-                submitRequest = $.extend({}, submitModel, formData);
-                bindSubmitRequest();
-                if (submitRequest != null) {
-                    $.ajax({
-                        type: "POST",
-                        url: submitURL,
-                        contentType: 'application/json; charset=utf-8',
-                        data: JSON.stringify(submitRequest),
-                        success: ajaxResultHandler
-                    });
-                }
+        $.wx.easyui.info.clear();
+        if ($('#detailForm').form('validate')) {
+            $.messager.progress({ title: '正在处理中', msg: '正在处理中...' });
+            var formData = $.wx.filter.queryParamByFormId('detailForm');
+            submitRequest = $.extend({}, submitModel, formData);
+            bindSubmitRequest();
+            if (submitRequest != null) {
+                $.ajax({
+                    type: "POST",
+                    url: submitURL,
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(submitRequest),
+                    success: ajaxResultHandler
+                });
             }
-
         }
-        var deleteRows = function() {
-            deleteFunction();
-        };
 
-
+    }
+    var deleteRows = function() {
+        deleteFunction();
+    };
 
     var beginEdit = function() {
         var row = grid.datagrid("getSelected");
@@ -151,9 +161,15 @@
     var dopermmit = function() {
         permmitfunction();
     }
+    var doreturnmsg = function() {
+        doreturnmsgfunction();
+    }
+    var dotransfer = function() {
+        dotransferfunction();
+    }
 
     var print =function() {
-    
+
     }
     function ajaxResultHandler(result) {
         if (result.ResponseStatus.ErrorCode === 'OK') {
@@ -208,6 +224,18 @@
         { text: "@permmitText", iconCls: 'icon-save', handler: dopermmit, id: "permmit" },
         </text>
             }
+             @if (toolbarItem.Contains("returnmsg"))
+    {
+                <text>
+            { text: "回复", iconCls: 'icon-return', handler: doreturnmsg, id: "returnmsg" },
+            </text>
+    }
+                 @if (toolbarItem.Contains("transfer"))
+    {
+                <text>
+            { text: " 转发", iconCls: 'icon-zhuanfa', handler: dotransfer, id: "transfer" },
+            </text>
+    }
         'test'
     ];
     </script>
@@ -240,6 +268,8 @@
                 onLoadError: loadError,
                 showFooter: true,
                 onClickRow: selectRow,
+                onDblClickRow:dbClickRow,
+                rowStyler:rowStylerLoad,
                 onLoadSuccess: loadSuccess
             });
             if (enableFilterData) {
@@ -325,7 +355,12 @@
         function selectRow(rowIndex, rowData) {
             clickRow(rowIndex, rowData);
         }
-
+        function dbClickRow(rowIndex, rowData) {
+            DbclickRow(rowIndex, rowData);
+        }
+        function rowStylerLoad(index, row) {
+            rowStylerLoadInit(index, row);
+        }
         function loadSuccess(data) {
             customloadSuccess(data);
         }

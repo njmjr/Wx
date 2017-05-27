@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
+using System.Web;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 using WeChat.Models;
@@ -454,6 +458,11 @@ namespace Wx.WEB.Controllers
             return Json(response, JsonRequestBehavior.DenyGet);
         }
 
+        /// <summary>
+        /// 角色菜单权限查询
+        /// </summary>
+        /// <param name="roleId"></param>
+        /// <returns></returns>
         [AjaxOnly]
         [HttpPost]
         public ActionResult QueryRolePrMenusConfig(string roleId)
@@ -467,6 +476,13 @@ namespace Wx.WEB.Controllers
             return Json(response, JsonRequestBehavior.DenyGet);
         }
 
+        /// <summary>
+        /// 修改角色权限
+        /// </summary>
+        /// <param name="menus"></param>
+        /// <param name="handles"></param>
+        /// <param name="roleId"></param>
+        /// <returns></returns>
         [AjaxOnly]
         [HttpPost]
         public ActionResult ModifyRolePower(IEnumerable<string> menus, IEnumerable<string> handles, string roleId)
@@ -483,5 +499,236 @@ namespace Wx.WEB.Controllers
             return Json(response, JsonRequestBehavior.DenyGet);
         }
 
+        [ForeVerufyActionFilter]
+        public ActionResult PrMsg()
+        {
+            return View();
+        }
+
+        [ForeVerufyActionFilter]
+        public ActionResult PrMsgInbox()
+        {
+            GridBusinessRule girdBusinessRule = new GridBusinessRule("收件箱")
+            {
+                GridId = "PrMsgInbox",
+                ToolbarItem = "delete,transfer,returnmsg",
+                PrimaryKey = "MSGID",
+                AutoSearch = true,
+                IsClosedQueryModal = "true",
+                DeleteUrl = Url.Action("DelMsg"),
+                GridDataUrl = Url.Action("QueryInbox"),
+                PermmitUrl = Url.Action("InboxCheck")
+            };
+            return View(girdBusinessRule);
+        }
+
+        [AjaxOnly]
+        [HttpPost]
+        public ActionResult QueryInbox(int pageIndex, int pageSize)
+        {
+            Msg request = new Msg
+            {
+                RequestType = 0,
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                DepartNo = Session["DepartNo"].CastTo(""),
+                StaffNo = Session["StaffNo"].CastTo("")
+            };
+            string response = WeChatHelper.PostService("Msg", request);
+            return JavaScript(response);
+        }
+
+        [ForeVerufyActionFilter]
+        public ActionResult PrMsgSentItems()
+        {
+            GridBusinessRule girdBusinessRule = new GridBusinessRule("已发送消息")
+            {
+                GridId = "PrMsgSentItems",
+                ToolbarItem = "delete,transfer",
+                PrimaryKey = "MSGID",
+                AutoSearch = true,
+                IsClosedQueryModal = "true",
+                DeleteUrl = Url.Action("DelMsg"),
+                GridDataUrl = Url.Action("QuerySentItems")
+            };
+            return View(girdBusinessRule);
+        }
+
+        [AjaxOnly]
+        [HttpPost]
+        public ActionResult QuerySentItems(int pageIndex, int pageSize)
+        {
+            Msg request = new Msg
+            {
+                RequestType = 1,
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                DepartNo = Session["DepartNo"].CastTo(""),
+                StaffNo = Session["StaffNo"].CastTo("")
+            };
+            string response = WeChatHelper.PostService("Msg", request);
+            return JavaScript(response);
+        }
+
+        [ForeVerufyActionFilter]
+        public ActionResult PrMsgNewMsg(string id, string level, string state, string body, string time, string title, string sender, string fileNo,string isPage,string boxfrom)
+        {
+            List<Role> roles = (List<Role>)CommonHelper.GetCommonApi("Roles", 3);
+            List<InsideDepart> departs = (List<InsideDepart>)CommonHelper.GetCommonApi("Departs", 4);
+            List<InsideStaff> staffs = (List<InsideStaff>)CommonHelper.GetCommonApi("Staffs", 5);
+
+            List<RoleExt> roleExts = roles.Select(role => new RoleExt() { id = role.ROLENO, text = role.ROLENAME, desc = role.ROLENO + ":" + role.ROLENAME }).ToList();
+            List<DepartExt> departExts = departs.Select(depart => new DepartExt() { id = depart.DEPARTNO, text = depart.DEPARTNAME, desc = depart.DEPARTNO + ":" + depart.DEPARTNAME }).ToList();
+            List<StaffExt> staffExts = staffs.Select(staff => new StaffExt() { id = staff.STAFFNO, text = staff.STAFFNAME, desc = staff.STAFFNO + ":" + staff.STAFFNAME }).ToList();
+            //删除当前用户
+            staffExts.Remove(staffExts.Where(r => r.id == Session["StaffNo"].CastTo("")).Single());
+
+            ViewBag.Roles = JsonConvert.SerializeObject(roleExts.OrderBy(p => p.id));
+            ViewBag.Departs = JsonConvert.SerializeObject(departExts.OrderBy(p => p.id));
+            ViewBag.Staffs = JsonConvert.SerializeObject(staffExts.OrderBy(p => p.id));
+            if (!string.IsNullOrEmpty(id))
+            {
+                ViewBag.Id = id;
+                ViewBag.Title = title;
+                ViewBag.Level = level;
+                ViewBag.State = state;
+                ViewBag.Body = body;
+                ViewBag.Time = " 发送于:" + time;
+                ViewBag.Sender = sender;
+                ViewBag.FileNo = fileNo;
+                ViewBag.IsPage = isPage;
+                ViewBag.Boxfrom = boxfrom;
+            }
+
+            GridBusinessRule girdBusinessRule = new GridBusinessRule("写新消息")
+            {
+                AutoSearch = false,
+                IsClosedQueryModal = "true",
+                EditUrl = Url.Action("QueryBeforeOrNext"),
+                DownUrl = Url.Action("DownLoadFile"),
+                PermmitUrl = Url.Action("SendMsg")
+            };
+            return View(girdBusinessRule);
+        }
+
+        [AjaxOnly]
+        [HttpPost]
+        public ActionResult QueryBeforeOrNext(string msgType, string msgId, string boxfrom)
+        {
+            Msg request = new Msg
+            {
+                RequestType = 4,
+                MsgType = msgType,
+                MsgId = msgId,
+                Boxfrom = boxfrom,
+                DepartNo = Session["DepartNo"].CastTo(""),
+                StaffNo = Session["StaffNo"].CastTo("")
+            };
+            string response = WeChatHelper.PostService("Msg", request);
+            return Json(response, JsonRequestBehavior.DenyGet);
+        }
+
+        [ForeVerufyActionFilter]
+        public void DownLoadFile(string fileNo)
+        {
+            Msg request = new Msg
+            {
+                RequestType = 5,
+                FileNo = fileNo
+            };
+            MsgResponse response = WeChatHelper.PostService<Msg, MsgResponse>("Msg", request);
+            if (response.DownFile.Length != 0)
+            {
+                Response.Clear();
+                Response.Buffer = true;
+                string strTemp = HttpUtility.UrlEncode(response.FileName, System.Text.Encoding.UTF8);
+                Response.AppendHeader("Content-Disposition", String.Format("attachment;filename={0}", strTemp));
+                Response.AppendHeader("Content-Length", response.DownFile.Length.ToString(CultureInfo.InvariantCulture));
+                Response.BinaryWrite(response.DownFile);
+                Response.Flush();
+                Response.End();
+            }
+        }
+
+        /// <summary>
+        /// 发送消息
+        /// </summary>
+        /// <param name="roleNos"></param>
+        /// <param name="departNos"></param>
+        /// <param name="staffNos"></param>
+        /// <param name="grade"></param>
+        /// <param name="title"></param>
+        /// <param name="content"></param>
+        /// <param name="fileName"></param>
+        /// <param name="fileData"></param>
+        /// <param name="fileNo"></param>
+        /// <returns></returns>
+        [AjaxOnly]
+        [HttpPost]
+        public ActionResult SendMsg(string roleNos, string departNos, string staffNos, string grade, string title, string content, string fileName, string fileData, string fileNo)
+        {
+            if (fileNo == "undefined")
+            {
+                fileNo = "";
+            }
+            byte[] myByte = null;
+            if (string.IsNullOrEmpty(fileNo) && !string.IsNullOrEmpty(fileData))
+            {
+                myByte = Convert.FromBase64String(fileData.Split(",")[1]);
+            }
+
+            List<string> roleList = roleNos.Split(",").ToList();
+            List<string> departList = departNos.Split(",").ToList();
+            List<string> staffList = staffNos.Split(",").ToList();
+
+            Msg request = new Msg
+            {
+                RequestType = 6,
+                Roles = roleList,
+                Departs = departList,
+                StaffNos = staffList,
+                Level = grade,
+                Title = title.Split("发送于")[0].Trim(),
+                Content = content,
+                FileName = fileName,
+                UpLoadFile = myByte,
+                FileNo = fileNo,
+                DepartNo = Session["DepartNo"].CastTo(""),
+                StaffNo = Session["StaffNo"].CastTo("")
+            };
+            string response = WeChatHelper.PostService("Msg", request);
+            return Json(response, JsonRequestBehavior.DenyGet);
+        }
+
+        [AjaxOnly]
+        [HttpPost]
+        public ActionResult DelMsg(List<string> msgIds, string msgType)
+        {
+            Msg request = new Msg
+            {
+                RequestType = 7,
+                MsgIds = msgIds,
+                MsgType = msgType,
+                DepartNo = Session["DepartNo"].CastTo(""),
+                StaffNo = Session["StaffNo"].CastTo("")
+            };
+            string response = WeChatHelper.PostService("Msg", request);
+            return Json(response, JsonRequestBehavior.DenyGet);
+        }
+
+        [AjaxOnly]
+        [HttpPost]
+        public ActionResult InboxCheck(string msgId)
+        {
+            Msg request = new Msg
+            {
+                RequestType = 9,
+                MsgId = msgId,
+                DepartNo = Session["DepartNo"].CastTo(""),
+                StaffNo = Session["StaffNo"].CastTo("")
+            };
+            string response = WeChatHelper.PostService("Msg", request);
+            return Json(response, JsonRequestBehavior.DenyGet);
+        }
     }
 }
