@@ -1,45 +1,39 @@
 ﻿using Quartz;
 using Quartz.Impl;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Topshelf;
-using Common.Logging;
 
 namespace Wx.Task
 {
     public sealed class ServiceRunner : ServiceControl, ServiceSuspend
     {
-        private readonly IScheduler scheduler;
+        private readonly IScheduler _scheduler;
 
         public ServiceRunner()
         {
-            scheduler = StdSchedulerFactory.GetDefaultScheduler();
+            _scheduler = StdSchedulerFactory.GetDefaultScheduler();
         }
 
         public bool Start(HostControl hostControl)
         {
-            scheduler.Start();
+            _scheduler.Start();
             return true;
         }
 
         public bool Stop(HostControl hostControl)
         {
-            scheduler.Shutdown(false);
+            _scheduler.Shutdown(false);
             return true;
         }
 
         public bool Continue(HostControl hostControl)
         {
-            scheduler.ResumeAll();
+            _scheduler.ResumeAll();
             return true;
         }
 
         public bool Pause(HostControl hostControl)
         {
-            scheduler.PauseAll();
+            _scheduler.PauseAll();
             return true;
         }
  

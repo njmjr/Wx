@@ -1,5 +1,5 @@
 /* Options:
-Date: 2017-05-26 17:16:06
+Date: 2017-05-31 17:27:55
 Version: 4.00
 Tip: To override a DTO option, remove "//" prefix before updating
 BaseUrl: http://osc.com:8889
@@ -32,6 +32,7 @@ using ServiceStack;
 using ServiceStack.DataAnnotations;
 using WeChat.ServiceModel.Base;
 using WeChat.Models;
+using WeChat.ServiceModel.Login;
 using WeChat.ServiceModel.PrivilegePR;
 using WeChat.ServiceModel.Crawler;
 using WeChat.ServiceModel.Wx;
@@ -219,6 +220,55 @@ namespace WeChat.ServiceModel.Crawler
         ///</summary>
         [ApiMember(Name="Reports", Description="返回查询结果", DataType="List", IsRequired=true)]
         public virtual Report Reports { get; set; }
+    }
+}
+
+namespace WeChat.ServiceModel.Login
+{
+
+    [Route("/Login")]
+    public partial class Login
+        : BaseRequest, IReturn<LoginResponse>
+    {
+        ///<summary>
+        ///请求方法
+        ///</summary>
+        [ApiMember(Name="RequestType", Description="请求方法", DataType="short", IsRequired=true)]
+        public virtual short RequestType { get; set; }
+
+        ///<summary>
+        ///登录员工号
+        ///</summary>
+        [ApiMember(Name="LoginStaffNo", Description="登录员工号", DataType="string", IsRequired=true)]
+        public virtual string LoginStaffNo { get; set; }
+
+        ///<summary>
+        ///密码
+        ///</summary>
+        [ApiMember(Name="Pwd", Description="密码", DataType="string", IsRequired=true)]
+        public virtual string Pwd { get; set; }
+    }
+
+    public partial class LoginResponse
+        : BaseResponse
+    {
+        ///<summary>
+        ///部门编号
+        ///</summary>
+        [ApiMember(Name="DepartNo", Description="部门编号", DataType="string", IsRequired=true)]
+        public virtual string DepartNo { get; set; }
+
+        ///<summary>
+        ///员工姓名
+        ///</summary>
+        [ApiMember(Name="StaffName", Description="员工姓名", DataType="string", IsRequired=true)]
+        public virtual string StaffName { get; set; }
+
+        ///<summary>
+        ///部门名称
+        ///</summary>
+        [ApiMember(Name="DepartName", Description="部门名称", DataType="string", IsRequired=true)]
+        public virtual string DepartName { get; set; }
     }
 }
 

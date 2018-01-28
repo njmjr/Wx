@@ -120,5 +120,7 @@
         public string TransferUrl { get; set; }
 
         public string DownUrl { get; set; }
+
+        public string SubmitUrl { get; set; }
     }
 }

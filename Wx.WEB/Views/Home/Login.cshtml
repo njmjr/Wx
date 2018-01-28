@@ -1,0 +1,76 @@
+﻿@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<body style="background-color:#35afe3; background-image:url('/content/images/light.png'); background-repeat:no-repeat; background-position:center top; overflow:hidden;">
+    <div id="mainBody">
+        <div id="cloud1" class="cloud"></div>
+        <div id="cloud2" class="cloud"></div>
+    </div>
+
+
+    <div class="loginbody">
+
+        <span class="systemlogo"></span>
+        <form id="searchForm" method="post">
+            <div class="loginbox">
+                <ul>
+                    <li><label>用户名</label><input name="id" id="id" type="text" class="loginuser" /></li>
+                    <li><label>密&nbsp;&nbsp;&nbsp;码</label><input name="pwd" id="pwd" type="password" class="loginpwd" /></li>
+                    <li><label>卡&nbsp;&nbsp;&nbsp;号</label><input name="cardNo" id="cardNo" type="text" class="loginuser" /></li>
+                    <li><label style="margin-left:28PX;">IP</label><input name="ip" id="ip" type="text" class="loginuser" /></li>
+                    <li id="infos" style="visibility:visible"></li>
+                    <li><input id="btnSetPri" type="button" class="loginbtn" value="登录" onclick="Logins()" /></li>
+                </ul>
+            </div>
+        </form>
+    </div>
+
+</body>
+@section footer{
+    <script src="~/Scripts/cloud.js"></script>
+    <link href="~/Content/style.css" rel="stylesheet" />
+    <script type="text/javascript">
+    $(function () {
+        $('.loginbox').css({ 'position': 'absolute', 'left': ($(window).width() - 692) / 2 });
+        $(window).resize(function () {
+            $('.loginbox').css({ 'position': 'absolute', 'left': ($(window).width() - 692) / 2 });
+        });
+    });
+
+    var Logins = function () {
+        var id = $("#id").val();
+        var pwd = $("#pwd").val();
+        if (id == '') {
+            $("#infos").html('请输入用户名');
+
+        } else if (pwd == '') {
+            $("#infos").html('请输入密码');
+        } else {
+            $("#infos").html('请稍后...');
+            var params = { "id": id, "pwd": pwd };
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("LoginCheck")",
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(params),
+                    datatype: 'json',
+                    success: function (result) {
+                        if (result) {
+                            if (result.ResponseStatus.ErrorCode === 'OK') {
+                                window.location.href = "/";
+                            } else {
+                                var errors = '';
+                                $.each(result.ResponseStatus.Errors, function (i, o) {
+                                    errors = errors + "<li>" + (o.ErrorCode != null ? o.ErrorCode + ':' : '') + o.Message + "</li>";
+                                });
+                                $.wx.easyui.msg.error(errors, '错误');
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+}

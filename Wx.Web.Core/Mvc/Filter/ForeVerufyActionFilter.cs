@@ -15,15 +15,14 @@ namespace Wx.Web.Core.Mvc.Filter
     {
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            if (filterContext.HttpContext.Session != null && filterContext.HttpContext.Session["StaffNo"] == null)
+            if (filterContext.HttpContext.Session["StaffNo"] == null)
             {
                 string strIp = ConfigurationManager.AppSettings["LoginIP"];
                 if (filterContext.HttpContext.Request.Cookies["strIp"] != null)
                 {
                     strIp = filterContext.HttpContext.Request.Cookies["strIp"].Value;
                 }
-                //string script = "window.top.location.href=http://'" + filterContext.HttpContext.Session["strIp"] + ConfigurationManager.AppSettings["LoginURI"].ToString() + "';";
-                string script = "window.top.location.href= 'http://" + strIp + ConfigurationManager.AppSettings["LoginURI"] + "';";
+                string script = "window.top.location.href= '/';";
                 filterContext.HttpContext.Response.Write("<script language=\"javascript\">" + script + "</script>");
                 return;
             }

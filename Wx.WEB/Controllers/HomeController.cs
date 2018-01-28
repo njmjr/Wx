@@ -1,5 +1,9 @@
-﻿using WeChat.Models;
+﻿using System.Net;
+using WeChat.Models;
+using WeChat.ServiceModel.Login;
+using Wx.Utility.Extensions;
 using Wx.Utility.Logging;
+using Wx.Utility.Secutiry;
 using Wx.WEB.Core.Common;
 using Wx.WEB.Core.Controllers;
 using Wx.Web.Core.Mvc.Filter;
@@ -8,6 +12,7 @@ using System.Collections.Generic;
 using System.Web;
 using System;
 using System.Collections;
+using Wx.WEB.Core.ViewModels;
 
 namespace Wx.WEB.Controllers
 {
@@ -22,12 +27,58 @@ namespace Wx.WEB.Controllers
             return Json(menus, JsonRequestBehavior.AllowGet);
         }
 
+
+
+        [AjaxOnly]
+        [HttpPost]
+        public ActionResult LoginCheck(string id, string pwd)
+        {
+            Login request = new Login
+            {
+                RequestType = 0,
+                LoginStaffNo = id,
+                Pwd = DecryptPwdHelper.EncodeString(pwd)
+            };
+            LoginResponse response = WeChatHelper.PostService<Login, LoginResponse>("Login", request);
+            if (response.ResponseStatus.ErrorCode=="OK")
+            {
+                Session["StaffNo"] = id;
+                Session["DepartNo"] = response.DepartNo;
+                Session["token"] = "0001";
+                Session["OperateCard"] = "2150090110009004";
+                Session["StaffName"] = response.StaffName;
+                Session["deptname"] = response.DepartName;
+                Session["type"] = "test";
+            }
+            return Json(response, JsonRequestBehavior.DenyGet);
+        }
+
         [ForeVerufyActionFilter]
         public ActionResult Index()
         {
+            if (Session["StaffNo"] == null)
+            {
+                return RedirectToAction("Login", "Home");
+                //return View("Login");
+            }
             ViewBag.City = CommonHelper.GetCity();
+            WriteCookie(CommonHelper.GetLoginIp());
             return View();
         }
+
+        public ActionResult Login()
+        {
+            return View();
+        }
+
+
+        public ActionResult LogOut()
+        {
+            Session.RemoveAll();
+            Session.Clear();
+            return View("Login");
+        }
+
 
 #if DEBUG
         public ActionResult LoginTestCard(string operateCard)
@@ -104,7 +155,7 @@ namespace Wx.WEB.Controllers
 
         private void WriteCookie(string strIp)
         {
-            HttpCookie cookie = new HttpCookie("strIp") {Value = strIp, Expires = DateTime.Now.AddDays(1)};
+            HttpCookie cookie = new HttpCookie("strIp") { Value = strIp, Expires = DateTime.Now.AddDays(1) };
             Response.AppendCookie(cookie);
         }
 
@@ -133,7 +184,7 @@ namespace Wx.WEB.Controllers
             while (enumerator.MoveNext())
             {
 
-                HttpRuntime.Cache.Remove((string)enumerator.Key); 
+                HttpRuntime.Cache.Remove((string)enumerator.Key);
             }
             return Content("缓存已清空");
         }

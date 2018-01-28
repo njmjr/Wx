@@ -10,9 +10,10 @@
     }
     string transferUrl = "http://" + strIp + "/OneCard/LogonSSO.aspx?staff=" + Session["StaffNo"] + "&token=" + Session["token"] + "&type=" + Session["type"] + "&power=one";
     string logo = "content/images/logo_" + ViewBag.City + ".png";
+
 }
 <div class="easyui-layout" data-options="fit:true">
-    <div data-options="region:'north', height:88,id:'top'" style="background:url(content/images/topbg.gif) repeat-x;margin-top: 0;border:none">
+    <div data-options="region:'north', height:88,id:'top'" style="background:url('/content/images/topbg.gif') repeat-x;margin-top: 0;border:none">
         <div class="topleft">
             <img src="@logo" title="系统首页" />
         </div>

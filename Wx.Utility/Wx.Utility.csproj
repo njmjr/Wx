@@ -128,6 +128,7 @@
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
     <Compile Include="Secutiry\CommunicationCryptor.cs" />
+    <Compile Include="Secutiry\DecryptPwdHelper.cs" />
     <Compile Include="Secutiry\DesHelper.cs" />
     <Compile Include="Secutiry\HashHelper.cs" />
     <Compile Include="Secutiry\RsaHelper.cs" />

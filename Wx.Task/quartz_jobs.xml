@@ -28,6 +28,24 @@
         <cron-expression>0/3 * * * * ?</cron-expression>
       </cron>
     </trigger>
+
+    <job>
+      <name>HelloJob</name>
+      <group>Test</group>
+      <description>HelloJob测试</description>
+      <job-type>Wx.Task.Job.HelloJob,Wx.Task</job-type>
+      <durable>true</durable>
+      <recover>false</recover>
+    </job>
+    <trigger>
+      <cron>
+        <name>HelloJobTrigger</name>
+        <group>Test</group>
+        <job-name>HelloJob</job-name>
+        <job-group>Test</job-group>
+        <cron-expression>0/5 * * * * ?</cron-expression>
+      </cron>
+    </trigger>
     
   </schedule>
 </job-scheduling-data>

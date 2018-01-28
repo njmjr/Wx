@@ -491,8 +491,8 @@ namespace Wx.WEB.Controllers
             {
                 RequestType = 2,
                 RoleNo = roleId,
-                Menus = menus.ToList(),
-                Handles = handles.ToList(),
+                Menus = menus == null ? null : menus.ToList(),
+                Handles = handles == null ? null : handles.ToList(),
                 CurrOper = Session["StaffNo"].CastTo(""),
             };
             string response = WeChatHelper.PostService("RolePower", request);
@@ -571,7 +571,7 @@ namespace Wx.WEB.Controllers
         }
 
         [ForeVerufyActionFilter]
-        public ActionResult PrMsgNewMsg(string id, string level, string state, string body, string time, string title, string sender, string fileNo,string isPage,string boxfrom)
+        public ActionResult PrMsgNewMsg(string id, string level, string state, string body, string time, string title, string sender, string fileNo, string isPage, string boxfrom)
         {
             List<Role> roles = (List<Role>)CommonHelper.GetCommonApi("Roles", 3);
             List<InsideDepart> departs = (List<InsideDepart>)CommonHelper.GetCommonApi("Departs", 4);

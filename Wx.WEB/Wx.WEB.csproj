@@ -621,6 +621,7 @@
     <Content Include="Content\images\loginlogo.png" />
     <Content Include="Content\images\loginlogo1.png" />
     <Content Include="Content\images\loginlogo2.png" />
+    <Content Include="Content\images\loginlogowj.png" />
     <Content Include="Content\images\loginsj.png" />
     <Content Include="Content\images\logo_cz.png" />
     <Content Include="Content\images\logo_cz_old.png" />
@@ -675,6 +676,7 @@
     <Content Include="Content\images\userbg.png" />
     <Content Include="Content\images\xzsmk.png" />
     <Content Include="Content\images\zhuanfa.png" />
+    <Content Include="Content\style.css" />
     <Content Include="Content\wx-icons.css" />
     <Content Include="Content\wx.css" />
     <Content Include="Content\PIE.htc" />
@@ -765,6 +767,7 @@
     <Content Include="Global.asax" />
     <Content Include="HtmlError.html" />
     <Content Include="Scripts\cardreaderhelper.js" />
+    <Content Include="Scripts\cloud.js" />
     <Content Include="Scripts\easyui152\jquery.easyui.min.js" />
     <Content Include="Scripts\easyui152\jquery.min.js" />
     <Content Include="Scripts\WJCardPrintPhoto.js" />
@@ -837,6 +840,7 @@
     <Content Include="Views\PrivilegePR\PrMsgInbox.cshtml" />
     <Content Include="Views\PrivilegePR\PrMsgNewMsg.cshtml" />
     <Content Include="Views\PrivilegePR\PrMsgSentItems.cshtml" />
+    <Content Include="Views\Home\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
